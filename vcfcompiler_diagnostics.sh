@@ -1,7 +1,7 @@
 #!/bin/bash
 #
 # Created: 2016/02/10
-# Last modified: 2016/02/23
+# Last modified: 2016/02/29
 # Authors: Ray Blick, Miles Benton
 # Version: 0.2
 # This is a major re-write of the basic script format, replaced while read; do loop 
@@ -28,12 +28,12 @@ OUTFILE=$(paste <(echo "$OUTPUT_DIRECTORY") <(echo "$OUTPUT_FILE_NAME") --delimi
 OUT_CSV_FILE=$(paste <(echo "$OUTFILE") <(echo ".csv") --delimiters '')
 
 # create output file or delete contents if it exists
-if [ -f $OUT_CSV_FILE ]; then
+if [ -f "$OUT_CSV_FILE" ]; then
     echo "csv file found... deleting its contents!"
-    cat /dev/null > $OUT_CSV_FILE
+    cat /dev/null > "$OUT_CSV_FILE"
 else
     echo "output csv file created"
-    > $OUT_CSV_FILE
+    > "$OUT_CSV_FILE"
 fi
 
 # add header to csv file (i.e. write one line)
@@ -47,6 +47,10 @@ header=$(paste <(echo "chromosome") \
                 <(echo "depth_coverage") \
                 <(echo "Ref_coverage") \
                 <(echo "Alt_coverage") \
+                <(echo "ForRef_coverage") \
+                <(echo "RevRef_coverage") \
+                <(echo "ForAlt_coverage") \
+                <(echo "RevAlt_coverage") \
                 <(echo "CAF1") \
                 <(echo "CAF2") \
                 <(echo "variant_type") \
@@ -58,33 +62,41 @@ header=$(paste <(echo "chromosome") \
                 <(echo "SIFT") \
                 <(echo "Polyphen2") \
                 --delimiters '\t')
-echo "$header" >> $OUT_CSV_FILE
+echo "$header" >> "$OUT_CSV_FILE"
 
 # define all the variables to output
-chrom=$(sed 1d $INPUTFILE | cut -f 1)
-pos=$(sed 1d $INPUTFILE | cut -f 2)
-id=$(sed 1d $INPUTFILE | cut -f 3)
-ref=$(sed 1d $INPUTFILE | cut -f 4)
-alt=$(sed 1d $INPUTFILE | cut -f 5)
-qual=$(sed 1d $INPUTFILE | cut -f 6)
-DP_coverage=$(sed '1d; s/^.*;DP=//' $INPUTFILE | tr ";" " " | awk '{print $1}')
-REF_coverage=$(sed '1d; s/^.*;RO=//' $INPUTFILE | tr ";" " " | awk '{print $1}')
-ALT_coverage=$(sed '1d; s/^.*;AO=//' $INPUTFILE | tr ";" " " | awk '{print $1}')
-GENO=$(grep -oP '[0-3]/[0-3]:' $INPUTFILE | sed -e 's/://g')    # genotype, will have to convert to letters in R
-CAF1=$(sed '1d; s/^.*;CAF=//' $INPUTFILE | tr ";" " " | awk '{print $1}' | sed -e 's/chr.*/./g' | tr "," " " | awk '{print $1}') 
-CAF2=$(sed '1d; s/^.*;CAF=//' $INPUTFILE | tr ";" " " | awk '{print $1}' | sed -e 's/chr.*/./g' | tr "," " " | awk '{print $2}' | sed -e 's/^$/./g')
-variant_type=$(sed '1d; s/^.*CSQ=//' $INPUTFILE |  tr "|" " " | awk '{print $2}')        # get variant type from VEP data
+chrom=$(sed 1d "$INPUTFILE" | cut -f 1)
+pos=$(sed 1d "$INPUTFILE" | cut -f 2)
+id=$(sed 1d "$INPUTFILE" | cut -f 3)
+ref=$(sed 1d "$INPUTFILE" | cut -f 4)
+alt=$(sed 1d "$INPUTFILE" | cut -f 5)
+qual=$(sed 1d "$INPUTFILE" | cut -f 6)
+# depth of coverage information 
+DP_coverage=$(sed '1d; s/^.*;DP=//' "$INPUTFILE" | tr ";" " " | awk '{print $1}')
+REF_coverage=$(sed '1d; s/^.*;RO=//' "$INPUTFILE" | tr ";" " " | awk '{print $1}')
+ALT_coverage=$(sed '1d; s/^.*;AO=//' "$INPUTFILE" | tr ";" " " | awk '{print $1}')
+ForRef_coverage=$(sed '1d; s/^.*;SRF=//' "$INPUTFILE" | tr ";" " " | awk '{print $1}')
+RevRef_coverage=$(sed '1d; s/^.*;SRR=//' "$INPUTFILE" | tr ";" " " | awk '{print $1}')
+ForAlt_coverage=$(sed '1d; s/^.*;SAF=//' "$INPUTFILE" | tr ";" " " | awk '{print $1}')
+RevAlt_coverage=$(sed '1d; s/^.*;SAR=//' "$INPUTFILE" | tr ";" " " | awk '{print $1}')
+#
+GENO=$(grep -oP '[0-3]/[0-3]:' "$INPUTFILE" | sed -e 's/://g')    # genotype, will have to convert to letters in R
+CAF1=$(sed '1d; s/^.*;CAF=//' "$INPUTFILE" | tr ";" " " | awk '{print $1}' | sed -e 's/chr.*/./g' | tr "," " " | awk '{print $1}') 
+CAF2=$(sed '1d; s/^.*;CAF=//' "$INPUTFILE" | tr ";" " " | awk '{print $1}' | sed -e 's/chr.*/./g' | tr "," " " | awk '{print $2}' | sed -e 's/^$/./g')
+variant_type=$(sed '1d; s/^.*CSQ=//' "$INPUTFILE" |  tr "|" " " | awk '{print $2}')        # get variant type from VEP data
 # get dbSNP gene symbol (only viable if an rs number is assigned) and extra gene info
-gene_symbol=$(sed -e '1d; s/^.*GENEINFO=//' $INPUTFILE | tr "| && :" " " | awk '{print $1}' | sed -e 's/chr.*/./g')
-gene_symbol2=$(sed -e '1d; s/^.*GENE=//' $INPUTFILE | tr "| && :" " " | awk '{print $1}' | sed -e 's/chr.*/./g')
-genes=$(paste -d' ' <(echo $gene_symbol| tr ' ' '\n') <(echo $gene_symbol2|tr ' ' '\n') | tr " " ";")
+gene_symbol=$(sed -e '1d; s/^.*GENEINFO=//' "$INPUTFILE" | tr "| && :" " " | awk '{print $1}' | sed -e 's/chr.*/./g')
+gene_symbol2=$(sed -e '1d; s/^.*GENE=//' "$INPUTFILE" | tr "| && :" " " | awk '{print $1}' | sed -e 's/chr.*/./g')
+genes=$(paste -d' ' <(echo "$gene_symbol" | tr ' ' '\n') <(echo "$gene_symbol2" | tr ' ' '\n') | tr " " ";")
 # future work to tidy the above
-coding=$(tail -n +2 $INPUTFILE | tr "| && :" " " | gawk --re-interval '{ printf "." ; for ( i = 2 ; i <= NF ; i ++ ) { if ( $i ~ /c\.[A-Z0-9]{2,}[A-Z]/ ) { printf $i ";" } } printf "\n" }' | sed -e 's/^.c/c/g')
-amino_acid_substitution=$(tail -n +2 $INPUTFILE | tr "| && :" " " | gawk --re-interval '{ printf "." ; for ( i = 2 ; i <= NF ; i ++ ) { if ( $i ~ /p\.[A-Za-z0-9]{3,}/ ) { printf $i ";" } } printf "\n" }' | sed -e 's/^.p/p/g')
-transcript=$(sed '1d; s/^.*Transcript|//' $INPUTFILE | tr "; && |" " " | awk '{print $1}') 
-MutationTaster=$(sed '1d; s/^.*MutationTaster_pred=//' $INPUTFILE | tr "; && |" " " | awk '{print $1}' | sed -e 's/chr.*/./g')
-SIFT=$(sed '1d; s/^.*SIFT_pred=//' $INPUTFILE | tr "; && |" " " | awk '{print $1}' | sed -e 's/chr.*/./g')
-Polyphen2=$(sed '1d; s/^.*Polyphen2_HDIV_pred=//' $INPUTFILE | tr "; && |" " " | awk '{print $1}' | sed -e 's/chr.*/./g')
+coding=$(tail -n +2 "$INPUTFILE" | tr "| && :" " " | gawk --re-interval '{ printf "." ; for ( i = 2 ; i <= NF ; i ++ ) { if ( $i ~ /c\.[A-Z0-9]{2,}[A-Z]/ ) { printf $i ";" } } printf "\n" }' | sed -e 's/^.c/c/g')
+amino_acid_substitution=$(tail -n +2 "$INPUTFILE" | tr "| && :" " " | gawk --re-interval '{ printf "." ; for ( i = 2 ; i <= NF ; i ++ ) { if ( $i ~ /p\.[A-Za-z0-9]{3,}/ ) { printf $i ";" } } printf "\n" }' | sed -e 's/^.p/p/g')
+# transcript=$(tail -n +2 $INPUTFILE | grep -oP 'CSQ=\K[^ ]*' | tr "| && :" " " | gawk --re-interval '{ printf "." ; for ( i = 2 ; i <= NF ; i ++ ) { if ( $i ~ /[NMX_]{2,}[0-9.]{7,}/ ) { printf $i ";" } } printf "\n" }')
+# above not working yet - due to the grep section (don't get lines without CSQ=)
+transcript=$(sed '1d; s/^.*Transcript|//' "$INPUTFILE" | tr "; && |" " " | awk '{print $1}') 
+MutationTaster=$(sed '1d; s/^.*MutationTaster_pred=//' "$INPUTFILE" | tr "; && |" " " | awk '{print $1}' | sed -e 's/chr.*/./g')
+SIFT=$(sed '1d; s/^.*SIFT_pred=//' "$INPUTFILE" | tr "; && |" " " | awk '{print $1}' | sed -e 's/chr.*/./g')
+Polyphen2=$(sed '1d; s/^.*Polyphen2_HDIV_pred=//' "$INPUTFILE" | tr "; && |" " " | awk '{print $1}' | sed -e 's/chr.*/./g')
 
 dataset=$(paste <(echo "$chrom") \
                 <(echo "$pos") \
@@ -96,6 +108,10 @@ dataset=$(paste <(echo "$chrom") \
                 <(echo "$DP_coverage") \
                 <(echo "$REF_coverage") \
                 <(echo "$ALT_coverage") \
+                <(echo "$ForRef_coverage") \
+                <(echo "$RevRef_coverage") \
+                <(echo "$ForAlt_coverage") \
+                <(echo "$RevAlt_coverage") \
                 <(echo "$CAF1") \
                 <(echo "$CAF2") \
                 <(echo "$variant_type") \
@@ -107,4 +123,4 @@ dataset=$(paste <(echo "$chrom") \
                 <(echo "$SIFT") \
                 <(echo "$Polyphen2") \
                     --delimiters '\t')
-echo "$dataset" >> $OUT_CSV_FILE
+echo "$dataset" >> "$OUT_CSV_FILE"
