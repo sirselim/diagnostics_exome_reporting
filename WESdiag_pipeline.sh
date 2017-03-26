@@ -1,7 +1,7 @@
 #!/bin/bash
 #
 # Created: 2016/07/15
-# Last modified: 2016/07/21
+# Last modified: 2017/03/27
 # Author: Miles Benton
 #
 # """
@@ -86,9 +86,11 @@ then
 else
     mkdir "$sampleDIR"
 fi
-# extract pipeline into created directory
+# extract/clone pipeline into created directory
 echo "...extracting pipeline scripts and directories..."
-tar -C "$sampleDIR" -xzf GRC_wes_pipeline_files.tar.gz
+# tar -C "$sampleDIR" -xzf GRC_wes_pipeline_files.tar.gz
+# replaced tar.gz with private GitHub repository for more detailed versioning 
+git clone git@github.com:sirselim/diagnostics_exome_reporting.git "$sampleDIR"
 # capture vcf and quality information files from 'raw' directory
 echo "...transfering required files..."
 # define the label and .vcf.gz string to narrow search
