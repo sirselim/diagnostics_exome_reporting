@@ -14,12 +14,18 @@
 # """
 
 # define the sample being processed
-INPUTFILE="$1"
-diagnosticList="$2"
-diagnosticGenes=$(echo "$diagnosticList" | sed 's/.txt//g')
-GENELIST="$3"
-genelist=$(echo "$GENELIST" | sed 's/.txt//g')
+# INPUTFILE="$1"	# annotated vcf file
+INPUTFILE=$(ls -d vcf/* | grep "_dbSNP_VEP_dbNSFP.vcf.gz$")
 filename=$(echo "$INPUTFILE" | tr "/ && ." " " | awk '{printf $2}')
+
+#
+# diagnosticList="$2"		# tier0/diagnostic gene list - now defined previously
+diagnosticGenes=$(echo "$diagnosticList" | sed 's/.txt//g')
+
+#
+# GENELIST="$3"	# tier1/disease specific gene list - now defined previously
+genelist=$(echo "$GENELIST" | sed 's/.txt//g')
+
 # date
 DATE=$(date +%Y_%m_%d)
 
@@ -81,7 +87,9 @@ for file in gene_lists/wes_gene_lists/*.txt; do
 	tail -n +3 "$file" >> gene_lists/wes_gene_lists/tmp_list.txt
 done
 sort gene_lists/wes_gene_lists/tmp_list.txt | uniq > gene_lists/wes_gene_lists/pathways_list.txt
-rm gene_lists/wes_gene_lists/tmp_list.txt
+grep -f gene_lists/filter_from_pathways.txt gene_lists/wes_gene_lists/pathways_list.txt -v > gene_lists/wes_gene_lists/tmp_list.txt
+mv gene_lists/wes_gene_lists/tmp_list.txt gene_lists/wes_gene_lists/pathways_list.txt
+# rm gene_lists/wes_gene_lists/tmp_list.txt
 # prepare the list for searching
 /bin/bash gene_lists/./genelist_prep.sh gene_lists/wes_gene_lists/pathways_list.txt
 # tier 2 filtering
@@ -105,7 +113,7 @@ if [ -f gene_lists/filtered_list.txt ]; then
     rm gene_lists/filtered_list.txt
 fi
 #	
-cat gene_lists/test_genes.txt gene_lists/wes_gene_lists/pathways_list.txt | sort | uniq > gene_lists/filtered_list.txt
+cat gene_lists/diagnostic_panel.txt gene_lists/test_genes_updated.txt gene_lists/wes_gene_lists/pathways_list.txt | sort | uniq > gene_lists/filtered_list.txt
 # prepare the list for searching
 /bin/bash gene_lists/./genelist_prep.sh gene_lists/filtered_list.txt
 # tier 3 filtering

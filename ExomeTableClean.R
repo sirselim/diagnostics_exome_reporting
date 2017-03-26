@@ -15,8 +15,9 @@ fileDate <- format(Sys.time(), "%a_%b_%d_%Y")
 filename <- arguments[1]
 samplename <- paste(unlist(strsplit(filename, split = '/'))[3])
 sampleID <- unlist(strsplit(samplename, split = '_'))[[1]]
+tier <- gsub('.*Tier_|_results.*', '', samplename) %>% paste0('_Tier', .)
 outdir <- paste0(paste(unlist(strsplit(filename, split = '/'))[1:2], collapse = '/'), '/clean/')
-outfile <- paste0(outdir, sampleID, '_Tier0_results_clean_', fileDate, '.csv')
+outfile <- paste0(outdir, sampleID, tier, '_results_clean_', fileDate, '.csv')
 
 ###
 # perform cleaning 
@@ -55,5 +56,41 @@ exome_table_clean <- data.frame(location = paste(exome_table$chromosome, exome_t
                                             ')', ' ', exome_table$alternate_allele, '(', exome_table$Alt_coverage, ')'),
                           ref_freq = exome_table$CAF1,
                           alt_freq = exome_table$CAF2)
+
+##
+# clean up coding and reverse complement
+coding_new <- NULL
+class(coding_new) <- 'character'
+
+for (i in c(1:nrow(exome_table_clean))) {
+  
+  ref <- exome_table_clean$ref
+  alt <- exome_table_clean$alt
+  n <- exome_table_clean$coding
+  
+  if (n[i] == '.') {
+    coding <- '.'
+  } else {
+    
+    ref_comp <- ifelse(ref[i] == 'A', 'T',
+                       ifelse(ref[i] == 'T', 'A', 
+                              ifelse(ref[i] == 'G', 'C', 
+                                     ifelse(ref[i] == 'C', 'G', ref[i]))))    
+    code <- gsub('.*>', '', n[i])
+    if ((code == alt[i]) == F) {
+      coding <- gsub('N', ref_comp, n[i])
+    } else {
+      coding <- gsub('N', ref[i], n[i])
+    }
+    
+  }
+  
+  coding_new <- rbind(coding_new, coding)
+  
+}
+#
+exome_table_clean$coding <- coding_new
+##
+
 # write clean table out to results dir
 write.csv(exome_table_clean, outfile, row.names = F)

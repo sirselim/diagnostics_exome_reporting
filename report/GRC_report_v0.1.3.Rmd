@@ -1,0 +1,713 @@
+---
+title: "Genomics Research Centre Diagnostics Clinic Genotyping Analysis Report"
+date: '`r format(Sys.time(), "%d %B, %Y")`'
+output: 
+  word_document:
+    reference_docx: 'template/GRC_WES_report_template_landscape.docx'
+    fig_caption: yes
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+require(magrittr)
+require(gtools)
+require(stringr)
+# require(knitr)
+```
+
+```{r pander_options, echo=FALSE}
+# set pander table-layout options
+library(pander)
+panderOptions('table.alignment.default', function(df)
+    ifelse(sapply(df, is.numeric), 'right', 'left'))
+panderOptions('table.split.table', Inf)
+panderOptions('big.mark', ",")
+panderOptions('keep.trailing.zeros', TRUE)
+```
+
+```{r sampleID, echo=FALSE, message=FALSE}
+# enter sample ID
+sampleID <- 'DG1051'
+# sampleID <- args[1]
+# get software and database versions
+versionList <- list.files('../vcf', pattern = '_versions.txt$', full.names = T)
+versionFile <- versionList[grep(sampleID, versionList)]
+# load version info
+versions <- read.csv(versionFile, head = F, as.is = T)
+colnames(versions) <- 'Parameters'
+# get run ID
+# ...extraction script here...
+runID <- 'XXXX'  # placeholder, need this information in the file name
+# runID <- args[2]
+# genome build
+genomeBuild <- 'hg19'
+# vcf file
+vcfFiles <- list.files('../vcf', pattern = '_dbSNP_VEP_dbNSFP.vcf.gz$', full.names = T)
+vcfFile <- vcfFiles[grep(sampleID, vcfFiles)]
+# todays date
+file_date <- format(Sys.time(), "%d_%m_%Y")
+```
+
+**Patient:** `r paste(sampleID)`
+
+**RUNID:** `r paste(runID)` <!--- **{need this information in the file name}** --->
+
+**Analysis Performed:**
+Alignment against `r genomeBuild` -> annotation pipeline (dbSNP, SnpSIFT, VEP, UCSC gene symbols) -> variant filtering
+```{r, echo=FALSE, message=FALSE}
+panderOptions('table.split.table', Inf)
+panderOptions('digits', 2)
+pander(versions)
+```
+<!---
+{to show what parameters were used, includes version number of curated files?}
+
+***Ray's idea: document when a sample is archived, when it was zipped and sent to storage (name of sample, date, run, timestamp, genome build)***
+--->
+**Date Analysis Performed:** `r format(Sys.time(), "%d %B, %Y")`
+
+## Quality Metrics
+
+Something from Proton/Torrent?
+{...now have text files from the server in ../coverage_stats...}
+```{r CoverageSummary, echo=FALSE, message=FALSE}
+# get VEP stats file
+CoverageSummary <- list.files('../coverage_stats', full.names = T)
+CoverageSummary <- CoverageSummary[grep(sampleID, CoverageSummary)]
+# general
+CoverageStats <- scan(CoverageSummary, what = 'raw', sep = ',', skip = 0, nmax = 40)
+CoverageStats <- gsub(' ', '', CoverageStats) %>% gsub(':', ': ', .)
+```
+
+```{r, echo=FALSE, results='asis'}
+pandoc.list(CoverageStats)
+```
+
+### Depth of coverage
+
+```{r DPstats, echo=FALSE}
+# coverageStats <- "zcat ../vcf/DG515_NOTCH3_024_dbSNP_VEP_dbNSFP.vcf.gz | grep -v '##\\|#' |  sed '1d; s/^.*;DP=//' | tr \";\" \" \" | awk '{print $1}' | datamash max 1 min 1 mean 1 median 1"
+coverageStats <- paste0("zcat ", vcfFile, " | grep -v '##\\|#' |  sed '1d; s/^.*;DP=//' | tr \";\" \" \" | awk '{print $1}' | datamash max 1 min 1 mean 1 median 1")
+#
+coverageStats <- round(as.numeric(unlist(strsplit(system(coverageStats, intern = T), split = '\t'))), 0)
+# total variants sequenced
+totalVars <- paste0("zcat ", vcfFile, " | grep -v '##\\|#' |  sed '1d; s/^.*;DP=//' | tr \";\" \" \" | awk '{print $1}' | wc -l")
+totalVars <- as.numeric(system(totalVars, intern = T))
+# variants with >=20X coverage
+goodCover <- paste0("zcat ", vcfFile, " | grep -v '##\\|#' |  sed '1d; s/^.*;DP=//' | tr \";\" \" \" | awk '{print $1}' | awk '$1>=20' | wc -l")
+goodCover <- as.numeric(system(goodCover, intern = T))
+# variants with <20X coverage
+poorCover <- paste0("zcat ", vcfFile, " | grep -v '##\\|#' |  sed '1d; s/^.*;DP=//' | tr \";\" \" \" | awk '{print $1}' | awk '$1<20' | wc -l")
+poorCover <- as.numeric(system(poorCover, intern = T))
+```
+
+total variants = `r as.character(totalVars[1])`  
+max coverage = `r coverageStats[1]` reads  
+min coverage = `r coverageStats[2]` reads  
+mean coverage = `r coverageStats[3]` reads  
+median coverage = `r coverageStats[4]` reads  
+
+A total of **`r round((poorCover/totalVars)*100, 1)`%** of all variants have < 20x coverage.
+
+*Note*: these statistics come from the DP data contained within the VCF file.
+
+### VEP summary statistics
+```{r VEPsummary, echo=FALSE, message=FALSE}
+# get VEP stats file
+vepSummary <- list.files('../vcf', pattern = '_VEP.vcf_summary.txt$', full.names = T)
+vepSummary <- vepSummary[grep(sampleID, vepSummary)]
+# general
+generalStats <- scan(vepSummary, what = 'raw', sep = ',', skip = 12, nmax = 8)
+generalStats <- gsub('\t', ' ', generalStats)
+# variants
+variantStats <- scan(vepSummary, what = 'raw', sep = ',', skip = 22, nmax = 5)
+variantStats <- gsub('\t', ' ', variantStats)
+# Consequences (most severe)
+severeStats <- scan(vepSummary, what = 'raw', sep = ',', skip = 30, nmax = 20)
+severeStats <- gsub('\t', ' ', severeStats)
+# Coding consequences
+codingStats <- scan(vepSummary, what = 'raw', sep = ',', skip = 81, nmax = 8)
+codingStats <- gsub('\t', ' ', codingStats)
+# SIFT summary
+siftStats <- scan(vepSummary, what = 'raw', sep = ',', skip = 91, nmax = 4)
+siftStats <- gsub('\t', ' ', siftStats)
+# Polyphen summary
+polyphenStats <- scan(vepSummary, what = 'raw', sep = ',', skip = 97, nmax = 4)
+polyphenStats <- gsub('\t', ' ', polyphenStats)
+```
+
+#### General Statistics
+```{r, echo=FALSE, results='asis'}
+pandoc.list(generalStats[c(2,3,5:8)])
+```
+
+#### Variant Statistics
+```{r, echo=FALSE, results='asis'}
+pandoc.list(variantStats)
+```
+
+#### Consequences (most severe)
+```{r, echo=FALSE, results='asis'}
+pandoc.list(severeStats)
+```
+
+#### Coding consequences
+```{r, echo=FALSE, results='asis'}
+pandoc.list(codingStats)
+```
+
+#### SIFT summary
+```{r, echo=FALSE, results='asis'}
+pandoc.list(siftStats)
+```
+
+#### Polyphen summary
+```{r, echo=FALSE, results='asis'}
+pandoc.list(polyphenStats)
+```
+
+## Tier 0 Annotations - Diagnostic Panel Genes
+
+This tier contains variants identified within the current diagnostic panel genes.
+
+```{r tier0, include=FALSE, echo=FALSE, message=FALSE}
+############################
+## tier 0 variant loading ##
+############################
+tier0 <- list.files('../results/Tier_0/clean', pattern = '.csv', full.names = T)
+tier0 <- tier0[grep(sampleID, tier0)]
+tier0_clean <- read.csv(tier0, head = T, as.is = T)
+#
+tier0_clean <- tier0_clean[mixedorder(tier0_clean$location),]
+rownames(tier0_clean) <- c(1:nrow(tier0_clean))
+####
+## READ ME!!
+# need a way to find all predicted damaging, using a grep and replace here - not optimal
+# tier0_clean[grep('D', tier0_clean$SIFT),]$SIFT = 'D'
+# tier0_clean[grep('D', tier0_clean$Polyphen2),]$Polyphen2 = 'D'
+####
+```
+
+There are **`r nrow(tier0_clean)`** variants present within the diagnostic panel genes.  
+
+### Tier 0.1 – Top Most Damaging Mutations/Variants
+
+```{r table_0.1, echo=FALSE, message=FALSE}
+tier0_mostdamg <- tier0_clean[tier0_clean$MutationTaster == "D" | tier0_clean$SIFT == "D",]
+# not to split tables
+panderOptions('table.split.table', Inf)
+panderOptions('digits', 2)
+# panderOptions('table.style', 'simple')
+# create table
+emphasize.cols(6) # italics for gene names
+# set.alignment(c('right', 'center'), row.names = 'right')
+if (nrow(tier0_mostdamg) > 0) { 
+  tier0_mostdamg <- tier0_mostdamg[mixedorder(tier0_mostdamg$location),]
+  rownames(tier0_mostdamg) <- c(1:nrow(tier0_mostdamg))
+  pander(tier0_mostdamg, caption = "Top Most Damaging Mutations/Variants")
+}
+```
+There are `r nrow(tier0_mostdamg)` most damaging mutations in this tier.
+  
+**Note:** *MutationTaster prediction*: **A** (disease causing automatic), **D** (disease causing), **N** (polymorphism) or **P** (polymorphism automatic). *SIFT prediction*: smaller than 0.05 is predicted as **D**(amaging), otherwise it is predicted as **T**(olerated). *Polyphen2 prediction*: **D** (probably damaging [0.957,1]), **P** (possibly damaging [0.453,0.956]) and **B** (benign [0,0.452]). Multiple predictions separated by ";".
+
+### Tier 0.2 – Mutations 
+
+```{r table_0.2 prep, echo=FALSE, message=FALSE, warning=FALSE}
+tier0_mutations <- tier0_clean[tier0_clean$dbSNP == '.' & tier0_clean$AAchange != '.',]
+if (nrow(tier0_mutations) != 0) {
+  tier0_mutations <- tier0_mutations[mixedorder(tier0_mutations$location),]
+  rownames(tier0_mutations) <- c(1:nrow(tier0_mutations))
+}
+```
+There are **`r nrow(tier0_mutations)`** variants that are amino acid changing and don't have an rs number.
+```{r table_0.2, echo=FALSE, message=FALSE, warning=FALSE}
+#
+emphasize.cols(6) # italics for gene names
+if (nrow(tier0_mutations) != 0) {
+  pander(tier0_mutations, caption = "Amino acid changing variant, no rs#")
+}
+```
+
+### Tier 0.3 – Variants 
+
+```{r table_0.3, echo=FALSE, message=FALSE, warning=FALSE}
+tier0_3a <- tier0_clean[tier0_clean$dbSNP == '.' & tier0_clean$AAchange == ".",]
+tier0_3b <- tier0_clean[tier0_clean$dbSNP != '.' & tier0_clean$AAchange != "." & tier0_clean$ref_freq < 0.01 | 
+                          tier0_clean$dbSNP != '.' & tier0_clean$AAchange != "." &tier0_clean$alt_freq < 0.01,]
+tier0_3c <- tier0_clean[tier0_clean$dbSNP != '.' & tier0_clean$AAchange == "." & tier0_clean$ref_freq < 0.01 | 
+                          tier0_clean$dbSNP != '.' & tier0_clean$AAchange == "." &tier0_clean$alt_freq < 0.01,]
+tier0_3 <- rbind(tier0_3a, tier0_3b, tier0_3c)
+```
+
+There are **`r nrow(tier0_3a)`** variants that are not amino acid changing and have no associated rs number.  
+There are **`r nrow(tier0_3b)`** variants that are amino acid changing, have a rs number and MAF < 1%.  
+There are **`r nrow(tier0_3c)`** variants that are not amino acid changing, have a rs number and MAF < 1%.  
+
+```{r table_0.3 out, echo=FALSE, message=FALSE, warning=FALSE}
+if (nrow(tier0_3) != 0) {
+  tier0_3 <- tier0_3[mixedorder(tier0_3$location),]
+  rownames(tier0_3) <- c(1:nrow(tier0_3))
+}
+emphasize.cols(6) # italics for gene names
+if (nrow(tier0_3) != 0) {
+  pander(tier0_3, caption = "Not amino acid changing and has no rs#; amino acid changing, has rs#, but MAF <1%; not amino acid changing, have a rs number and MAF < 1%.")
+}
+```
+
+### Tier 0.4 – Rare SNPs 
+
+```{r table_0.4, echo=FALSE, message=FALSE, warning=FALSE}
+tier0_4 <- tier0_clean[tier0_clean$dbSNP != '.' & (tier0_clean$ref_freq > 0.01 & tier0_clean$ref_freq < 0.1) | 
+                        tier0_clean$dbSNP != '.' & (tier0_clean$alt_freq > 0.01 & tier0_clean$alt_freq < 0.1),]
+tier0_4 <- tier0_4[mixedorder(tier0_4$location),]
+rownames(tier0_4) <- c(1:nrow(tier0_4))
+```
+There are **`r nrow(tier0_4)`** variants classified as rare SNPs. 
+```{r table_0.4 out, echo=FALSE, message=FALSE, warning=FALSE}
+emphasize.cols(6) # italics for gene names
+pander(tier0_4, caption = "Any variant with rs number and MAF >1% <10%")
+```
+
+## Tier 1 Annotations – Disease Specific Genes 
+
+```{r tier1 cleaning data, include=FALSE, echo=FALSE, message=FALSE, warning=FALSE}
+############################
+## tier 1 variant loading ##
+############################
+tier1 <- list.files('../results/Tier_1/clean', pattern = '.csv', full.names = T)
+tier1 <- tier1[grep(sampleID, tier1)]
+tier1_clean <- read.csv(tier1, head = T, as.is = T)
+####
+## READ ME!!
+# need a way to find all predicted damaging, using a grep and replace here - not optimal
+# MutationTaster
+try(silent = T, (tier1_clean[grep('D', tier1_clean$MutationTaster),]$MutationTaster = 'D'))
+try(silent = T, (tier1_clean[grep('A', tier1_clean$MutationTaster),]$MutationTaster = 'A'))
+try(silent = T, (tier1_clean[grep('N', tier1_clean$MutationTaster),]$MutationTaster = 'N'))
+try(silent = T, (tier1_clean[grep('P', tier1_clean$MutationTaster),]$MutationTaster = 'P'))
+tier1_clean$MutationTaster <- factor(tier1_clean$MutationTaster, levels = c('D', 'A', 'N', 'P', '.')) 
+# SIFT
+try(silent = T, (tier1_clean[grep('D', tier1_clean$SIFT),]$SIFT = 'D'))
+try(silent = T, (tier1_clean[grep('T', tier1_clean$SIFT),]$SIFT = 'T'))
+tier1_clean$SIFT <- factor(tier1_clean$SIFT, levels = c('D', 'T', '.')) 
+# Polyphen2
+try(silent = T, (tier1_clean[grep('D', tier1_clean$Polyphen2),]$Polyphen2 = 'D'))
+try(silent = T, (tier1_clean[grep('P', tier1_clean$Polyphen2),]$Polyphen2 = 'P'))
+try(silent = T, (tier1_clean[grep('B', tier1_clean$Polyphen2),]$Polyphen2 = 'B'))
+tier1_clean$Polyphen2 <- factor(tier1_clean$Polyphen2, levels = c('D', 'P', 'B', '.')) 
+levels(tier1_clean$Polyphen2) 
+# used try to handle errors if the given situation doesn't exist
+####
+```
+There are a total of **`r nrow(tier1_clean)`** variants in this tier.
+
+{FHM, Ataxia, etc. For epilepsy and others, perhaps tiers could have specific names as there may be more tiers than the “standard” arrangement and some may be more likely to check for a specific patient }
+
+### Tier 1.1 – Top Most Damaging Mutations/Variants 
+
+Any of the following:
+
+  * Amino acid changing variant
+    + no rs#
+    + has rs#, but MAF <1%
+  * No AA change
+    + no rs#
+
+{All sorted by the number of predictors showing “Damaging” or the equivalent}
+
+```{r table_1.1, echo=FALSE, message=FALSE}
+tier1_mostdamg <- tier1_clean[tier1_clean$MutationTaster == "D" | tier1_clean$SIFT == "D" | tier1_clean$Polyphen2 == "D",]
+tier1_mostdamg <- tier1_mostdamg[mixedorder(tier1_mostdamg$location),]
+rownames(tier1_mostdamg) <- c(1:nrow(tier1_mostdamg))
+# not to split tables
+panderOptions('table.split.table', Inf)
+panderOptions('digits', 2)
+# panderOptions('table.style', 'simple')
+# create table
+emphasize.cols(6) # italics for gene names
+# set.alignment(c('right', 'center'), row.names = 'right')
+pander(tier1_mostdamg, caption = "Top Most Damaging Mutations/Variants")
+```
+  
+**Note:** *MutationTaster prediction*: **A** (disease causing automatic), **D** (disease causing), **N** (polymorphism) or **P** (polymorphism automatic). *SIFT prediction*: smaller than 0.05 is predicted as **D**(amaging), otherwise it is predicted as **T**(olerated). *Polyphen2 prediction*: **D** (probably damaging [0.957,1]), **P** (possibly damaging [0.453,0.956]) and **B** (benign [0,0.452]). Multiple predictions separated by ";".
+
+### Tier 1.2 – Mutations 
+
+```{r table_1.2 prep, echo=FALSE, message=FALSE, warning=FALSE}
+tier1_mutations <- tier1_clean[tier1_clean$dbSNP == '.' & tier1_clean$AAchange != '.',]
+if (nrow(tier1_mutations) != 0) {
+  tier1_mutations <- tier1_mutations[mixedorder(tier1_mutations$location),]
+  rownames(tier1_mutations) <- c(1:nrow(tier1_mutations))
+}
+```
+There are **`r nrow(tier1_mutations)`** variants that are amino acid changing and don't have an rs number.
+```{r table_1.2, echo=FALSE, message=FALSE, warning=FALSE}
+#
+emphasize.cols(6) # italics for gene names
+if (nrow(tier1_mutations) != 0) {
+  pander(tier1_mutations, caption = "Amino acid changing variant, no rs#")
+}
+```
+
+### Tier 1.3 – Variants 
+
+```{r table_1.3, echo=FALSE, message=FALSE, warning=FALSE}
+tier1_3a <- tier1_clean[tier1_clean$dbSNP == '.' & tier1_clean$AAchange == ".",]
+tier1_3b <- tier1_clean[tier1_clean$dbSNP != '.' & tier1_clean$AAchange != "." & tier1_clean$ref_freq < 0.01 | 
+                          tier1_clean$dbSNP != '.' & tier1_clean$AAchange != "." &tier1_clean$alt_freq < 0.01,]
+tier1_3c <- tier1_clean[tier1_clean$dbSNP != '.' & tier1_clean$AAchange == "." & tier1_clean$ref_freq < 0.01 | 
+                          tier1_clean$dbSNP != '.' & tier1_clean$AAchange == "." &tier1_clean$alt_freq < 0.01,]
+tier1_3 <- rbind(tier1_3a, tier1_3b, tier1_3c)
+tier1_3 <- tier1_3[mixedorder(tier1_3$location),]
+```
+
+There are **`r nrow(tier1_3a)`** variants that are not amino acid changing and have no associated rs number.  
+There are **`r nrow(tier1_3b)`** variants that are amino acid changing, have a rs number and MAF < 1%.  
+There are **`r nrow(tier1_3c)`** variants that are not amino acid changing, have a rs number and MAF < 1%.  
+
+```{r table_1.3 out, echo=FALSE, message=FALSE, warning=FALSE}
+rownames(tier1_3) <- c(1:nrow(tier1_3))
+emphasize.cols(6) # italics for gene names
+pander(tier1_3, caption = "Not amino acid changing and has no rs#; amino acid changing, has rs#, but MAF <1%; not amino acid changing, have a rs number and MAF < 1%.")
+```
+
+### Tier 1.4 – Rare SNPs 
+
+```{r table_1.4, echo=FALSE, message=FALSE, warning=FALSE}
+tier1_4 <- tier1_clean[tier1_clean$dbSNP != '.' & (tier1_clean$ref_freq > 0.01 & tier1_clean$ref_freq < 0.1) | 
+                        tier1_clean$dbSNP != '.' & (tier1_clean$alt_freq > 0.01 & tier1_clean$alt_freq < 0.1),]
+tier1_4 <- tier1_4[mixedorder(tier1_4$location),]
+rownames(tier1_4) <- c(1:nrow(tier1_4))
+```
+There are **`r nrow(tier1_4)`** variants classified as rare SNPs.  
+```{r table_1.4 out, echo=FALSE, message=FALSE, warning=FALSE}
+emphasize.cols(6) # italics for gene names
+if (nrow(tier1_4) < 50) { 
+  pander(tier1_4, caption = "Any variant with rs number and MAF >1% <10%") 
+  } else { 
+    pander(tier1_4[c(1:50),], caption = "Any variant with rs number and MAF >1% <10% (top 50 variants)")
+  }
+```
+
+\newpage
+
+## Tier 2 Annotations – Pathway Specific Genes 
+
+```{r tier2 cleaning data, include=FALSE, echo=FALSE, message=FALSE}
+############################
+## tier 2 variant loading ##
+############################
+tier2 <- list.files('../results/Tier_2/clean', pattern = '.csv', full.names = T)
+tier2 <- tier2[grep(sampleID, tier2)]
+tier2_clean <- read.csv(tier2, head = T, as.is = T)
+####
+## READ ME!!
+# need a way to find all predicted damaging, using a grep and replace here - not optimal
+# MutationTaster
+try(silent = T, (tier2_clean[grep('D', tier2_clean$MutationTaster),]$MutationTaster = 'D'))
+try(silent = T, (tier2_clean[grep('A', tier2_clean$MutationTaster),]$MutationTaster = 'A'))
+try(silent = T, (tier2_clean[grep('N', tier2_clean$MutationTaster),]$MutationTaster = 'N'))
+try(silent = T, (tier2_clean[grep('P', tier2_clean$MutationTaster),]$MutationTaster = 'P'))
+tier2_clean$MutationTaster <- factor(tier2_clean$MutationTaster, levels = c('D', 'A', 'N', 'P', '.')) 
+# SIFT
+try(silent = T, (tier2_clean[grep('D', tier2_clean$SIFT),]$SIFT = 'D'))
+try(silent = T, (tier2_clean[grep('T', tier2_clean$SIFT),]$SIFT = 'T'))
+tier2_clean$SIFT <- factor(tier2_clean$SIFT, levels = c('D', 'T', '.')) 
+# Polyphen2
+try(silent = T, (tier2_clean[grep('D', tier2_clean$Polyphen2),]$Polyphen2 = 'D'))
+try(silent = T, (tier2_clean[grep('P', tier2_clean$Polyphen2),]$Polyphen2 = 'P'))
+try(silent = T, (tier2_clean[grep('B', tier2_clean$Polyphen2),]$Polyphen2 = 'B'))
+tier2_clean$Polyphen2 <- factor(tier2_clean$Polyphen2, levels = c('D', 'P', 'B', '.')) 
+####
+```
+There are a total of **`r nrow(tier2_clean)`** variants in this tier.
+
+{CNS, Muscle, Cardiac, etc. Drawn from KEGG or similar database?}
+
+### Tier 2.1 – Top Most Damaging Mutations/Variants 
+
+Any of the following:
+
+  * Amino acid changing variant
+    + no rs#
+    + has rs#, but MAF <1%
+  * No AA change
+    + no rs#
+
+{All sorted by the number of predictors showing “Damaging” or the equivalent}
+
+```{r table_2.1, echo=FALSE, message=FALSE}
+# tier2_mostdamg <- tier2_clean[tier2_clean$MutationTaster == "D",]
+tier2_mostdamg <- tier2_clean[tier2_clean$MutationTaster == "D" & tier2_clean$SIFT == "D" & tier2_clean$Polyphen2 == "D" &
+                                (tier2_clean$dbSNP == "." & tier2_clean$AAchange != '.'),]
+tier2_mostdamg <- tier2_mostdamg[mixedorder(tier2_mostdamg$location),]
+rownames(tier2_mostdamg) <- c(1:nrow(tier2_mostdamg))
+# set.alignment(c('right', 'center'), row.names = 'right')
+emphasize.cols(6) # italics for gene names
+pander(tier2_mostdamg, caption = "Top Most Damaging Mutations/Variants")
+```
+
+### Tier 2.2 – Mutations 
+
+There are **`r nrow(tier2_clean[tier2_clean$dbSNP == '.' & tier2_clean$AAchange != '.',])`** variants that are amino acid changing without associated rs numbers. 
+
+```{r table_2.2, echo=FALSE, message=FALSE}
+tier2_mutations <- tier2_clean[tier2_clean$dbSNP == '.' & tier2_clean$AAchange != '.',]
+tier2_mutations <- tier2_mutations[order(tier2_mutations$MutationTaster, tier2_mutations$SIFT, tier2_mutations$Polyphen2),]
+rownames(tier2_mutations) <- c(1:nrow(tier2_mutations))
+#
+emphasize.cols(6) # italics for gene names
+# if more than 50 only show the most damaging 50
+if (nrow(tier2_mutations) < 50) {
+  rownames(tier2_mutations) <- c(1:nrow(tier2_mutations))
+  pander(tier2_mutations, caption = "Amino acid changing variant, no rs#") 
+  } else { 
+    pander(tier2_mutations[c(1:50),], caption = "Amino acid changing variant, no rs# (first 50 'most damaging' variants)")
+  }
+```
+
+### Tier 2.3 – Variants 
+
+```{r table_2.3, echo=FALSE, message=FALSE, warning=FALSE}
+tier2_3a <- tier2_clean[tier2_clean$dbSNP == '.' & tier2_clean$AAchange == ".",]
+tier2_3b <- tier2_clean[tier2_clean$dbSNP != '.' & tier2_clean$AAchange != "." & tier2_clean$ref_freq < 0.01 | 
+                          tier2_clean$dbSNP != '.' & tier2_clean$AAchange != "." &tier2_clean$alt_freq < 0.01,]
+tier2_3c <- tier2_clean[tier2_clean$dbSNP != '.' & tier2_clean$AAchange == "." & tier2_clean$ref_freq < 0.01 | 
+                          tier2_clean$dbSNP != '.' & tier2_clean$AAchange == "." &tier2_clean$alt_freq < 0.01,]
+tier2_3 <- rbind(tier2_3a, tier2_3b, tier2_3c)
+```
+
+There are **`r nrow(tier2_3a)`** variants that are not amino acid changing and have no associated rs number.  
+There are **`r nrow(tier2_3b)`** variants that are amino acid changing, have a rs number and MAF < 1%.  
+There are **`r nrow(tier2_3c)`** variants that are not amino acid changing, have a rs number and MAF < 1%.  
+
+```{r table_2.3 out, echo=FALSE, message=FALSE, warning=FALSE}
+#
+rownames(tier2_3) <- c(1:nrow(tier2_3))
+#
+tier2_3_dmg <- tier2_3[order(tier2_3$MutationTaster, tier2_3$SIFT, tier2_3$Polyphen2),]
+rownames(tier2_3_dmg) <- c(1:nrow(tier2_3_dmg))
+#
+emphasize.cols(6) # italics for gene names
+if (nrow(tier2_3) < 50) {
+  tier2_3_dmg <- tier2_3_dmg[mixedorder(tier2_3_dmg$location),]
+  rownames(tier2_3_dmg) <- c(1:nrow(tier2_3_dmg))
+  pander(tier2_3, caption = "Not amino acid changing and has no rs#; amino acid changing, has rs#, but MAF <1%; not amino acid changing, have a rs number and MAF < 1%.") 
+  } else {
+    pander(tier2_3_dmg[c(1:50),], caption = "Not amino acid changing and has no rs#; amino acid changing, has rs#, but MAF <1%; not amino acid changing, have a rs number and MAF < 1% (first 50 variants ranked by 'most damaging').") 
+    }
+```
+
+### Tier 2.4 – Rare SNPs 
+
+```{r table_2.4, echo=FALSE, message=FALSE, warning=FALSE}
+tier2_4 <- tier2_clean[tier2_clean$dbSNP != '.' & (tier2_clean$ref_freq > 0.01 & tier2_clean$ref_freq < 0.1) | 
+                        tier2_clean$dbSNP != '.' & (tier2_clean$alt_freq > 0.01 & tier2_clean$alt_freq < 0.1),]
+tier2_4 <- tier2_4[order(tier2_4$MutationTaster, tier2_4$SIFT, tier2_4$Polyphen2),]
+# tier2_4 <- tier2_4[mixedorder(tier2_4$location),]
+rownames(tier2_4) <- c(1:nrow(tier2_4))
+```
+There are **`r nrow(tier2_4)`** variants classified as rare SNPs.
+```{r table_2.4 out, echo=FALSE, message=FALSE, warning=FALSE}
+emphasize.cols(6) # italics for gene names
+if (nrow(tier2_4) < 50) {
+  tier2_4 <- tier2_4[mixedorder(tier2_4$location),]
+  rownames(tier2_4) <- c(1:nrow(tier2_4))
+  pander(tier2_4, caption = "Any variant with rs number and MAF >1% <10%") 
+  } else {
+    pander(tier2_4[c(1:50),], caption = "Any variant with rs number and MAF >1% <10% (top 50 variants)")
+  }
+```
+
+\newpage
+
+##Tier 3 Annotations – All Other Genes 
+
+```{r tier3 cleaning data, include=FALSE, echo=FALSE, message=FALSE}
+############################
+## tier 3 variant loading ##
+############################
+tier3 <- list.files('../results/Tier_3/clean', pattern = '.csv', full.names = T)
+tier3 <- tier3[grep(sampleID, tier3)]
+tier3_clean <- read.csv(tier3, head = T, as.is = T)
+####
+## READ ME!!
+# need a way to find all predicted damaging, using a grep and replace here - not optimal
+# MutationTaster
+try(silent = T, (tier3_clean[grep('D', tier3_clean$MutationTaster),]$MutationTaster = 'D'))
+try(silent = T, (tier3_clean[grep('A', tier3_clean$MutationTaster),]$MutationTaster = 'A'))
+try(silent = T, (tier3_clean[grep('N', tier3_clean$MutationTaster),]$MutationTaster = 'N'))
+try(silent = T, (tier3_clean[grep('P', tier3_clean$MutationTaster),]$MutationTaster = 'P'))
+tier3_clean$MutationTaster <- factor(tier3_clean$MutationTaster, levels = c('D', 'A', 'N', 'P', '.')) 
+# SIFT
+try(silent = T, (tier3_clean[grep('D', tier3_clean$SIFT),]$SIFT = 'D'))
+try(silent = T, (tier3_clean[grep('T', tier3_clean$SIFT),]$SIFT = 'T'))
+tier3_clean$SIFT <- factor(tier3_clean$SIFT, levels = c('D', 'T', '.')) 
+# Polyphen2
+try(silent = T, (tier3_clean[grep('D', tier3_clean$Polyphen2),]$Polyphen2 = 'D'))
+try(silent = T, (tier3_clean[grep('P', tier3_clean$Polyphen2),]$Polyphen2 = 'P'))
+try(silent = T, (tier3_clean[grep('B', tier3_clean$Polyphen2),]$Polyphen2 = 'B'))
+tier3_clean$Polyphen2 <- factor(tier3_clean$Polyphen2, levels = c('D', 'P', 'B', '.')) 
+####
+```
+There are a total of **`r nrow(tier3_clean)`** variants in this tier.
+
+{Anything not included in the previous sets. I would suggest perhaps moving the Rare SNPs for this tier down to Tier 4, as there will be too many to work with. That may also need to be done for the Epilepsy or other panels where there’s more than 30 or so targeted genes in a tier}.
+
+### Tier 3.1 – Top Most Damaging Mutations/Variants 
+
+Any of the following:
+
+  * Amino acid changing variant
+    + no rs#
+    + has rs#, but MAF <1%
+  * No AA change
+    + no rs#
+
+{All sorted by the number of predictors showing “Damaging” or the equivalent}
+
+```{r table_3.1, echo=FALSE, message=FALSE}
+# tier3_mostdamg <- tier3_clean[tier3_clean$MutationTaster == 'D' & tier3_clean$SIFT == 'D' & tier3_clean$Polyphen2 == 'D',]
+tier3_mostdamg <- tier3_clean[tier3_clean$MutationTaster == "D" & tier3_clean$SIFT == "D" & tier3_clean$Polyphen2 == "D" &
+                                tier3_clean$dbSNP == "." & tier3_clean$AAchange != '.',]
+# order based on location
+tier3_mostdamg <- tier3_mostdamg[mixedorder(tier3_mostdamg$location),]
+rownames(tier3_mostdamg) <- c(1:nrow(tier3_mostdamg))
+# set.alignment(c('right', 'center'), row.names = 'right')
+emphasize.cols(6) # italics for gene names
+if (nrow(tier3_mostdamg) < 50) {
+  pander(tier3_mostdamg, caption = "Top most damaging variants.") 
+  } else {
+    pander(tier3_mostdamg[c(1:50),], caption = "First 50 most damaging variants.")
+  }
+```
+
+### Tier 3.2 – Mutations 
+
+There are **`r nrow(tier3_clean[tier3_clean$dbSNP == '.' & tier3_clean$AAchange != '.',])`** variants that are amino acid changing without associated rs numbers. 
+
+```{r table_3.2, echo=FALSE, message=FALSE}
+tier3_mutations <- tier3_clean[tier3_clean$dbSNP == '.' & tier3_clean$AAchange != '.',]
+tier3_mutations <- tier3_mutations[order(tier3_mutations$MutationTaster, tier3_mutations$SIFT, tier3_mutations$Polyphen2),]
+rownames(tier3_mutations) <- c(1:nrow(tier3_mutations))
+#
+emphasize.cols(6) # italics for gene names
+# if more than 50 only show the most damaging 50
+if (nrow(tier3_mutations) < 50) {
+  rownames(tier3_mutations) <- c(1:nrow(tier3_mutations))
+  pander(tier3_mutations, caption = "Amino acid changing variant, no rs#") 
+  } else { 
+    pander(tier3_mutations[c(1:50),], caption = "Amino acid changing variant, no rs# (first 50 'most damaging' variants)")
+  }
+```
+
+### Tier 3.3 – Variants 
+
+{Not amino acid changing and has no rs#; amino acid changing, has rs#, but MAF <1%}
+```{r table_3.3, echo=FALSE, message=FALSE, warning=FALSE}
+tier3_3a <- tier3_clean[tier3_clean$dbSNP == '.' & tier3_clean$AAchange == ".",]
+tier3_3b <- tier3_clean[tier3_clean$dbSNP != '.' & tier3_clean$AAchange != "." & tier3_clean$ref_freq < 0.01 | 
+                          tier3_clean$dbSNP != '.' & tier3_clean$AAchange != "." &tier3_clean$alt_freq < 0.01,]
+tier3_3c <- tier3_clean[tier3_clean$dbSNP != '.' & tier3_clean$AAchange == "." & tier3_clean$ref_freq < 0.01 | 
+                          tier3_clean$dbSNP != '.' & tier3_clean$AAchange == "." &tier3_clean$alt_freq < 0.01,]
+tier3_3 <- rbind(tier3_3a, tier3_3b)
+```
+
+There are **`r nrow(tier3_3a)`** variants that are not amino acid changing and have no associated rs number.  
+There are **`r nrow(tier3_3b)`** variants that are amino acid changing, have a rs number and MAF < 1%.  
+There are **`r nrow(tier3_3c)`** variants that are not amino acid changing, have a rs number and MAF < 1%.  
+
+```{r table_3.3 out, echo=FALSE, message=FALSE, warning=FALSE}
+#
+rownames(tier3_3) <- c(1:nrow(tier3_3))
+#
+tier3_3_dmg <- tier3_3[order(tier3_3$MutationTaster, tier3_3$SIFT, tier3_3$Polyphen2),]
+rownames(tier3_3_dmg) <- c(1:nrow(tier3_3_dmg))
+#
+emphasize.cols(6) # italics for gene names
+if (nrow(tier3_3) < 50) {
+  tier3_3_dmg <- tier3_3_dmg[mixedorder(tier3_3_dmg$location),]
+  rownames(tier3_3_dmg) <- c(1:nrow(tier3_3_dmg))
+  pander(tier3_3, caption = "Not amino acid changing and has no rs#; amino acid changing, has rs#, but MAF <1%; not amino acid changing, have a rs number and MAF < 1%.") 
+  } else {
+    pander(tier3_3_dmg[c(1:50),], caption = "Not amino acid changing and has no rs#; amino acid changing, has rs#, but MAF <1%; not amino acid changing, have a rs number and MAF < 1% (first 50 variants ranked by 'most damaging').") 
+    }
+```
+
+\newpage
+
+## Tier 4 Annotations – Polymorphisms 
+
+{Polymorphisms for all Tiers}.
+
+### Tier 4.1 – Polymorphisms for Tier 1 Genes 
+
+```{r tier1Poly, echo=FALSE, message=FALSE}
+# {any variant with rs# and MAF >10%}
+tier1_poly <- tier1_clean[tier1_clean[grep('rs', tier1_clean$dbSNP),]$ref_freq > 0.1,]
+outname <- paste('../results/Tier_4/', sampleID, '_tier4.1_polyVariants_', file_date, '.csv', sep = '')
+write.csv(tier1_poly, outname, row.names = F)
+```
+There are **`r nrow(tier1_poly)`** variants with rs numbers and ref MAF > 10% 
+
+### Tier 4.2 – Polymorphisms for Tier 2 Genes 
+
+```{r tier2Poly, echo=FALSE, message=FALSE}
+# {any variant with rs# and MAF >10%}
+tier2_poly <- tier2_clean[tier2_clean[grep('rs', tier2_clean$dbSNP),]$ref_freq > 0.1,]
+outname <- paste('../results/Tier_4/', sampleID, '_tier4.2_polyVariants_', file_date, '.csv', sep = '')
+write.csv(tier2_poly, outname, row.names = F)
+```
+There are **`r nrow(tier2_poly)`** variants with rs numbers and ref MAF > 10% 
+
+### Tier 4.3 – Polymorphisms for Tier 3 Genes 
+
+```{r tier3Poly, echo=FALSE, message=FALSE}
+# {any variant with rs# and MAF >10%}
+tier3_poly <- tier3_clean[tier3_clean[grep('rs', tier3_clean$dbSNP),]$ref_freq > 0.1,]
+outname <- paste('../results/Tier_4/', sampleID, '_tier4.3_polyVariants_', file_date, '.csv', sep = '')
+write.csv(tier3_poly, outname, row.names = F)
+```
+There are **`r nrow(tier3_poly)`** variants with rs numbers and ref MAF > 10% 
+
+\newpage
+
+# Appendix
+
+### Complete Tier 0 variant table
+
+```{r tier0_complete, echo=FALSE, message=FALSE}
+# create table
+emphasize.cols(6) # italics for gene names
+# set.alignment(c('right', 'center'), row.names = 'right')
+pander(tier0_clean, caption = "All variants for Tier 0 (diagnostic panel genes)")
+```
+
+### MutationAssessor HTML links
+
+These variants are all **MutationTaster_pred=D [damaging]** and **MutationAssessor_pred=H [high]**.
+
+```{r mutation_links, echo=FALSE, message=FALSE, results='asis'}
+file.list <- list.files(path = '../results/mutation_links', pattern = '*.txt', full.names = T)
+file.name <- file.list[grep(sampleID, file.list)]
+
+mutation_links <- read.table(file = file.name, head = T, as.is = T)
+mutation_links <- mutation_links[str_length(mutation_links$REF) == 1, c(2:9)]
+
+mutation_links$GENESYM <- gsub('^.;', '', mutation_links$GENESYM) 
+mutation_links$GENESYM <- sapply(sapply(strsplit(mutation_links$GENESYM, ";"), unique), paste, collapse = ";")
+
+mutation_links$LOCATION <- paste(mutation_links$CHR, mutation_links$POSITION, sep = ':')
+mutation_links <- mutation_links[c(9,3:8)]
+
+panderOptions('table.split.table', Inf)
+panderOptions('digits', 2)
+panderOptions('plain.ascii', TRUE)
+# panderOptions('table.style', 'simple')
+# create table
+emphasize.cols(7) # italics for gene names
+# set.alignment(c('right', 'center'), row.names = 'right')
+rownames(mutation_links) <- c(1:nrow(mutation_links))
+pander(mutation_links, caption = "MutationAssessor links for the Top Most Damaging Mutations/Variants")
+```
