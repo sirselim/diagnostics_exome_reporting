@@ -146,6 +146,9 @@ echo ""
 # """
 # This script forms the start of the diagnostic WES pipeline, annotating vcf files with various databases.
 # """
+# set perl locale
+export LC_ALL=C
+#
 echo "############################################################################"
 echo "###################### Performing VCF file annotation ######################"
 echo "############################################################################"
@@ -167,8 +170,8 @@ echo "##########################################################################
 echo "############################## VEP annotation ##############################"
 echo "############################################################################"
 echo "...annotating with VEP..."
-/data/all/programs/VEP/ensembl-tools-release-86/scripts/variant_effect_predictor/variant_effect_predictor.pl --assembly GRCh37 --fasta /ramdisk/hg19_mod.fa.gz --cache \
---merged -i vcf/"$filename"_dbSNP.vcf --offline --stats_text --everything -o vcf/"$filename"_dbSNP_VEP.vcf --vcf --dir /home/gringer/.vep --fork 10 --force_overwrite
+perl /data/all/programs/VEP/vep-87-github-release/vep.pl --assembly GRCh37 --fasta /ramdisk/hg19_mod.fa.gz --cache --merged -i vcf/"$filename"_dbSNP.vcf \
+--offline --stats_text --everything -o vcf/"$filename"_dbSNP_VEP.vcf --vcf --dir /data/all/VEPdata --fork 10 --force_overwrite
 ## SNPSift dbNSFP
 echo ""
 echo "############################################################################"
