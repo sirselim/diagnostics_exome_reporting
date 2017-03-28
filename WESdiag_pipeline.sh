@@ -87,7 +87,7 @@ else
     mkdir "$sampleDIR"
 fi
 # extract/clone pipeline into created directory
-echo "...extracting pipeline scripts and directories..."
+echo "...cloning and extracting latest pipeline scripts and directories from GitHub..."
 # tar -C "$sampleDIR" -xzf GRC_wes_pipeline_files.tar.gz
 # replaced tar.gz with private GitHub repository for more detailed versioning 
 git clone git@github.com:sirselim/diagnostics_exome_reporting.git "$sampleDIR"
