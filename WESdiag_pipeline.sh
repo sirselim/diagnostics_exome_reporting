@@ -167,7 +167,7 @@ echo "##########################################################################
 echo "############################## VEP annotation ##############################"
 echo "############################################################################"
 echo "...annotating with VEP..."
-/data/all/programs/VEP/ensembl-tools-release-82/scripts/variant_effect_predictor/variant_effect_predictor.pl --assembly GRCh37 --fasta /ramdisk/hg19_mod.fa.gz --cache \
+/data/all/programs/VEP/ensembl-tools-release-86/scripts/variant_effect_predictor/variant_effect_predictor.pl --assembly GRCh37 --fasta /ramdisk/hg19_mod.fa.gz --cache \
 --merged -i vcf/"$filename"_dbSNP.vcf --offline --stats_text --everything -o vcf/"$filename"_dbSNP_VEP.vcf --vcf --dir /home/gringer/.vep --fork 10 --force_overwrite
 ## SNPSift dbNSFP
 echo ""
