@@ -1,7 +1,7 @@
 # diagnostics_exome_reporting
 Pipeline to filter whole exome vcf files and generate a report document for clinical diagnostics.
 
-# Current to-do list and fixes
+# Current to-do list and fixes pending
 
   - GitHub repo requires ssh passphrase each use
   - issue with grep using gene lists (files) and vcf.gz
