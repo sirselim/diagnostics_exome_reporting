@@ -94,9 +94,9 @@ echo "...filtering at tier 2: Pathway Specific Genes..."
 # replace grep filtering with tabix for speed
 zcat Homo_sapiens.GRCh37.87.genes.bed.gz | grep -w -f gene_lists/wes_gene_lists/pathways_list.txt | sort -k 1,1V -k2,2n -k3,3n > gene_lists/wes_gene_lists/pathway_gene_regions.txt
 tabix -R gene_lists/wes_gene_lists/pathway_gene_regions.txt vcf/"$filename".vcf.gz > results/Tier_2/"$filename"_Tier_2_results.vcf
-# add header back
+# add header back for processing
 cat vcf/vcf_header.txt results/Tier_2/"$filename"_Tier_2_results.vcf > results/Tier_2/"$filename"_Tier_2_results_"$DATE".vcf
-# clean up
+# clean up 
 rm results/Tier_2/"$filename"_Tier_2_results.vcf
 rm gene_lists/wes_gene_lists/pathways_list_filter.txt
 rm gene_lists/wes_gene_lists/pathway_gene_regions.txt
@@ -105,7 +105,7 @@ rm gene_lists/wes_gene_lists/pathway_gene_regions.txt
 # run Rscript to generate 'clean' csv output
 /usr/bin/Rscript ExomeTableClean.R results/Tier_2/"$filename"_Tier_2_results_"$DATE".csv
 
-## Tier 3: All Other Genes
+## Tier 3: All Other Genes/Variants
 # create list of all other genes
 # combine the previously used filter lists and inverse grep
 # remove previous versions
@@ -115,15 +115,16 @@ if [ -f gene_lists/filtered_list.txt ]; then
 fi
 #	
 cat gene_lists/diagnostic_panel.txt gene_lists/test_genes_updated.txt gene_lists/wes_gene_lists/pathways_list.txt | sort | uniq > gene_lists/filtered_list.txt
-# prepare the list for searching
-/bin/bash gene_lists/./genelist_prep.sh gene_lists/filtered_list.txt
 # tier 3 filtering
 echo "...filtering at tier 3: All Other Genes..."
-zcat vcf/"$filename".vcf.gz | grep -v -f gene_lists/filtered_list_filter.txt | grep -v '##\|#' > results/Tier_3/"$filename"_Tier_3_results.vcf
+# replace grep filtering with tabix for speed, take inverse here to get remaining genes/variants
+zcat Homo_sapiens.GRCh37.87.genes.bed.gz | grep -w -v -f gene_lists/filtered_list.txt | sort -k 1,1V -k2,2n -k3,3n > gene_lists/remaining_variant_regions.txt
+tabix -R gene_lists/remaining_variant_regions.txt vcf/"$filename".vcf.gz > results/Tier_3/"$filename"_Tier_3_results.vcf
+# add header back for processing
 cat vcf/vcf_header.txt results/Tier_3/"$filename"_Tier_3_results.vcf > results/Tier_3/"$filename"_Tier_3_results_"$DATE".vcf
 # clean up
 rm results/Tier_3/"$filename"_Tier_3_results.vcf
-rm gene_lists/filtered_list_filter.txt
+rm gene_lists/remaining_variant_regions.txt
 # extract info for report and save as csv
 /bin/bash ./vcfcompiler_diagnostics.sh results/Tier_3/"$filename"_Tier_3_results_"$DATE".vcf
 # run Rscript to generate 'clean' csv output
