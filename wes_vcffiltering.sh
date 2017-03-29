@@ -98,7 +98,6 @@ tabix -R gene_lists/wes_gene_lists/pathway_gene_regions.txt vcf/"$filename".vcf.
 cat vcf/vcf_header.txt results/Tier_2/"$filename"_Tier_2_results.vcf > results/Tier_2/"$filename"_Tier_2_results_"$DATE".vcf
 # clean up 
 rm results/Tier_2/"$filename"_Tier_2_results.vcf
-rm gene_lists/wes_gene_lists/pathways_list_filter.txt
 rm gene_lists/wes_gene_lists/pathway_gene_regions.txt
 # extract info for report and save as csv
 /bin/bash ./vcfcompiler_diagnostics.sh results/Tier_2/"$filename"_Tier_2_results_"$DATE".vcf
