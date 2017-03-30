@@ -20,11 +20,11 @@ filename=$(echo "$INPUTFILE" | tr "/ && ." " " | awk '{printf $2}')
 
 #
 # diagnosticList="$2"		# tier0/diagnostic gene list - now defined previously
-diagnosticGenes=$(echo "$diagnosticList" | sed 's/.txt//g')
+# diagnosticGenes=$(echo "$diagnosticList" | sed 's/.txt//g')
 
 #
 # GENELIST="$3"	# tier1/disease specific gene list - now defined previously
-genelist=$(echo "$GENELIST" | sed 's/.txt//g')
+# genelist=$(echo "$GENELIST" | sed 's/.txt//g')
 
 # date
 DATE=$(date +%Y_%m_%d)
@@ -46,13 +46,23 @@ bcftools view -h vcf/"$filename".vcf.gz | tail -n 1 > vcf/vcf_header.txt
 ## Tier 0: Diagnostic Panel Genes
 # tier 0 filtering
 echo "...filtering at tier 0: Diagnostic Panel Genes..."
+# --- detele after testing: start 
 # prepare the list for searching
-/bin/bash gene_lists/./genelist_prep.sh "$diagnosticList"
+# /bin/bash gene_lists/./genelist_prep.sh "$diagnosticList"
 # zcat vcf/"$filename".vcf.gz | grep -f gene_lists/test_genes.txt | grep -v '##' > results/Tier_0/"$filename"_Tier_0_results.vcf
-zcat vcf/"$filename".vcf.gz | grep -f "$diagnosticGenes"_filter.txt | grep -v '##\|#' > results/Tier_0/"$filename"_Tier_0_results.vcf
+# zcat vcf/"$filename".vcf.gz | grep -f "$diagnosticGenes"_filter.txt | grep -v '##\|#' > results/Tier_0/"$filename"_Tier_0_results.vcf
+# cat vcf/vcf_header.txt results/Tier_0/"$filename"_Tier_0_results.vcf > results/Tier_0/"$filename"_Tier_0_results_"$DATE".vcf
+# --- delete after testing: end
+### modified tabix version
+# replace grep filtering with tabix for speed
+zcat Homo_sapiens.GRCh37.87.genes.bed.gz | grep -w -f gene_lists/"$diagnosticList" | sort -k 1,1V -k2,2n -k3,3n > gene_lists/Diagnostics_gene_regions.txt
+tabix -R gene_lists/Diagnostics_gene_regions.txt vcf/"$filename".vcf.gz > results/Tier_0/"$filename"_Tier_0_results.vcf
+# add header back for processing
 cat vcf/vcf_header.txt results/Tier_0/"$filename"_Tier_0_results.vcf > results/Tier_0/"$filename"_Tier_0_results_"$DATE".vcf
+### ----------------------
 # clean up
 rm results/Tier_0/"$filename"_Tier_0_results.vcf
+rm gene_lists/Diagnostics_gene_regions.txt
 # rm ${diagnosticGenes}_filter.txt 
 # extract info for report and save as csv
 /bin/bash ./vcfcompiler_diagnostics.sh results/Tier_0/"$filename"_Tier_0_results_"$DATE".vcf
@@ -62,13 +72,23 @@ rm results/Tier_0/"$filename"_Tier_0_results.vcf
 ## Tier 1: Disease Specific Genes
 # tier 1 filtering
 echo "...filtering at tier 1: Disease Specific Genes..."
+# --- detele after testing: start 
 # prepare the list for searching
-/bin/bash gene_lists/./genelist_prep.sh "$GENELIST"
+# /bin/bash gene_lists/./genelist_prep.sh "$GENELIST"
 # zcat vcf/"$filename".vcf.gz | grep -f gene_lists/test_genes.txt | grep -v '##' > results/Tier_1/"$filename"_Tier_1_results.vcf
-zcat vcf/"$filename".vcf.gz | grep -f "$genelist"_filter.txt | grep -v '##\|#' > results/Tier_1/"$filename"_Tier_1_results.vcf
+# zcat vcf/"$filename".vcf.gz | grep -f "$genelist"_filter.txt | grep -v '##\|#' > results/Tier_1/"$filename"_Tier_1_results.vcf
+# cat vcf/vcf_header.txt results/Tier_1/"$filename"_Tier_1_results.vcf > results/Tier_1/"$filename"_Tier_1_results_"$DATE".vcf
+# --- delete after testing: end
+### modified tabix version
+# replace grep filtering with tabix for speed
+zcat Homo_sapiens.GRCh37.87.genes.bed.gz | grep -w -f gene_lists/"$GENELIST" | sort -k 1,1V -k2,2n -k3,3n > gene_lists/Tier1_gene_regions.txt
+tabix -R gene_lists/Tier1_gene_regions.txt vcf/"$filename".vcf.gz > results/Tier_1/"$filename"_Tier_1_results.vcf
+# add header back for processing
 cat vcf/vcf_header.txt results/Tier_1/"$filename"_Tier_1_results.vcf > results/Tier_1/"$filename"_Tier_1_results_"$DATE".vcf
+### ----------------------
 # clean up
 rm results/Tier_1/"$filename"_Tier_1_results.vcf
+rm gene_lists/Tier1_gene_regions.txt
 # rm ${genelist}_filter.txt 
 # extract info for report and save as csv
 /bin/bash ./vcfcompiler_diagnostics.sh results/Tier_1/"$filename"_Tier_1_results_"$DATE".vcf
