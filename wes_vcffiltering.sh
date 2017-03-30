@@ -55,7 +55,7 @@ echo "...filtering at tier 0: Diagnostic Panel Genes..."
 # --- delete after testing: end
 ### modified tabix version
 # replace grep filtering with tabix for speed
-zcat Homo_sapiens.GRCh37.87.genes.bed.gz | grep -w -f gene_lists/"$diagnosticList" | sort -k 1,1V -k2,2n -k3,3n > gene_lists/Diagnostics_gene_regions.txt
+zcat Homo_sapiens.GRCh37.87.genes.bed.gz | grep -w -f "$diagnosticList" | sort -k 1,1V -k2,2n -k3,3n > gene_lists/Diagnostics_gene_regions.txt
 tabix -R gene_lists/Diagnostics_gene_regions.txt vcf/"$filename".vcf.gz > results/Tier_0/"$filename"_Tier_0_results.vcf
 # add header back for processing
 cat vcf/vcf_header.txt results/Tier_0/"$filename"_Tier_0_results.vcf > results/Tier_0/"$filename"_Tier_0_results_"$DATE".vcf
@@ -81,7 +81,7 @@ echo "...filtering at tier 1: Disease Specific Genes..."
 # --- delete after testing: end
 ### modified tabix version
 # replace grep filtering with tabix for speed
-zcat Homo_sapiens.GRCh37.87.genes.bed.gz | grep -w -f gene_lists/"$GENELIST" | sort -k 1,1V -k2,2n -k3,3n > gene_lists/Tier1_gene_regions.txt
+zcat Homo_sapiens.GRCh37.87.genes.bed.gz | grep -w -f "$GENELIST" | sort -k 1,1V -k2,2n -k3,3n > gene_lists/Tier1_gene_regions.txt
 tabix -R gene_lists/Tier1_gene_regions.txt vcf/"$filename".vcf.gz > results/Tier_1/"$filename"_Tier_1_results.vcf
 # add header back for processing
 cat vcf/vcf_header.txt results/Tier_1/"$filename"_Tier_1_results.vcf > results/Tier_1/"$filename"_Tier_1_results_"$DATE".vcf
