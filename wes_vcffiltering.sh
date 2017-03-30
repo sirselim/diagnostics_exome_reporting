@@ -38,7 +38,7 @@ echo "...starting filtering of sample $filename..."
 
 ## create text file containing software/database version details
 echo "...extracting software and database version information..."
-zcat vcf/"$filename".vcf.gz | grep '##' | grep 'VEP=v\|SnpSiftV\|file\|source=\|parameters[A-Z]\|tmap\|reference=' > vcf/"$filename"_versions.txt
+zcat vcf/"$filename".vcf.gz | grep '##' | grep 'VEP=\|SnpSiftV\|file\|source=\|parameters[A-Z]\|tmap\|reference=' > vcf/"$filename"_versions.txt
 
 # get vcf header for out files
 bcftools view -h vcf/"$filename".vcf.gz | tail -n 1 > vcf/vcf_header.txt
