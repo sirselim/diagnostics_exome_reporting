@@ -15,7 +15,7 @@ require(stringr)
 # require(knitr)
 ```
 
-```{r pander_options, echo=FALSE}
+```{r pander_options, echo=FALSE, message=FALSE}
 # set pander table-layout options
 require(pander)
 panderOptions('table.alignment.default', function(df)
