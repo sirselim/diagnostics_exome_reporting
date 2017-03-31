@@ -17,7 +17,7 @@ require(stringr)
 
 ```{r pander_options, echo=FALSE}
 # set pander table-layout options
-library(pander)
+require(pander)
 panderOptions('table.alignment.default', function(df)
     ifelse(sapply(df, is.numeric), 'right', 'left'))
 panderOptions('table.split.table', Inf)
@@ -27,8 +27,8 @@ panderOptions('keep.trailing.zeros', TRUE)
 
 ```{r sampleID, echo=FALSE, message=FALSE}
 # enter sample ID
-sampleID <- 'DG1051'
-# sampleID <- args[1]
+# sampleID <- 'DG1021'
+sampleID <- args[1]
 # get software and database versions
 versionList <- list.files('../vcf', pattern = '_versions.txt$', full.names = T)
 versionFile <- versionList[grep(sampleID, versionList)]
@@ -37,8 +37,8 @@ versions <- read.csv(versionFile, head = F, as.is = T)
 colnames(versions) <- 'Parameters'
 # get run ID
 # ...extraction script here...
-runID <- 'XXXX'  # placeholder, need this information in the file name
-# runID <- args[2]
+# runID <- 'XXXX'  # placeholder, need this information in the file name
+runID <- args[2]
 # genome build
 genomeBuild <- 'hg19'
 # vcf file
