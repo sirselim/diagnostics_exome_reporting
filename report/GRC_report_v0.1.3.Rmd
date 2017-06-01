@@ -282,8 +282,8 @@ tier1_clean <- read.csv(tier1, head = T, as.is = T)
 ## READ ME!!
 # need a way to find all predicted damaging, using a grep and replace here - not optimal
 # MutationTaster
-try(silent = T, (tier1_clean[grep('D', tier1_clean$MutationTaster),]$MutationTaster = 'D'))
 try(silent = T, (tier1_clean[grep('A', tier1_clean$MutationTaster),]$MutationTaster = 'A'))
+try(silent = T, (tier1_clean[grep('D', tier1_clean$MutationTaster),]$MutationTaster = 'D'))
 try(silent = T, (tier1_clean[grep('N', tier1_clean$MutationTaster),]$MutationTaster = 'N'))
 try(silent = T, (tier1_clean[grep('P', tier1_clean$MutationTaster),]$MutationTaster = 'P'))
 tier1_clean$MutationTaster <- factor(tier1_clean$MutationTaster, levels = c('D', 'A', 'N', 'P', '.')) 
@@ -317,7 +317,7 @@ Any of the following:
 {All sorted by the number of predictors showing “Damaging” or the equivalent}
 
 ```{r table_1.1, echo=FALSE, message=FALSE}
-tier1_mostdamg <- tier1_clean[tier1_clean$MutationTaster == "D" | tier1_clean$SIFT == "D" | tier1_clean$Polyphen2 == "D",]
+tier1_mostdamg <- tier1_clean[(tier1_clean$MutationTaster == "A" | tier1_clean$MutationTaster == "D") | tier1_clean$SIFT == "D" | tier1_clean$Polyphen2 == "D",]
 tier1_mostdamg <- tier1_mostdamg[mixedorder(tier1_mostdamg$location),]
 rownames(tier1_mostdamg) <- c(1:nrow(tier1_mostdamg))
 # not to split tables
@@ -405,8 +405,8 @@ tier2_clean <- read.csv(tier2, head = T, as.is = T)
 ## READ ME!!
 # need a way to find all predicted damaging, using a grep and replace here - not optimal
 # MutationTaster
-try(silent = T, (tier2_clean[grep('D', tier2_clean$MutationTaster),]$MutationTaster = 'D'))
 try(silent = T, (tier2_clean[grep('A', tier2_clean$MutationTaster),]$MutationTaster = 'A'))
+try(silent = T, (tier2_clean[grep('D', tier2_clean$MutationTaster),]$MutationTaster = 'D'))
 try(silent = T, (tier2_clean[grep('N', tier2_clean$MutationTaster),]$MutationTaster = 'N'))
 try(silent = T, (tier2_clean[grep('P', tier2_clean$MutationTaster),]$MutationTaster = 'P'))
 tier2_clean$MutationTaster <- factor(tier2_clean$MutationTaster, levels = c('D', 'A', 'N', 'P', '.')) 
@@ -439,8 +439,7 @@ Any of the following:
 
 ```{r table_2.1, echo=FALSE, message=FALSE}
 # tier2_mostdamg <- tier2_clean[tier2_clean$MutationTaster == "D",]
-tier2_mostdamg <- tier2_clean[tier2_clean$MutationTaster == "D" & tier2_clean$SIFT == "D" & tier2_clean$Polyphen2 == "D" &
-                                (tier2_clean$dbSNP == "." & tier2_clean$AAchange != '.'),]
+tier2_mostdamg <- tier2_clean[((tier2_clean$MutationTaster == "A" & tier2_clean$MutationTaster == "D") & tier2_clean$SIFT == "D" & tier2_clean$Polyphen2 == "D") | (tier2_clean$dbSNP == "." & tier2_clean$AAchange != '.'),]
 tier2_mostdamg <- tier2_mostdamg[mixedorder(tier2_mostdamg$location),]
 rownames(tier2_mostdamg) <- c(1:nrow(tier2_mostdamg))
 # set.alignment(c('right', 'center'), row.names = 'right')
@@ -535,8 +534,8 @@ tier3_clean <- read.csv(tier3, head = T, as.is = T)
 ## READ ME!!
 # need a way to find all predicted damaging, using a grep and replace here - not optimal
 # MutationTaster
-try(silent = T, (tier3_clean[grep('D', tier3_clean$MutationTaster),]$MutationTaster = 'D'))
 try(silent = T, (tier3_clean[grep('A', tier3_clean$MutationTaster),]$MutationTaster = 'A'))
+try(silent = T, (tier3_clean[grep('D', tier3_clean$MutationTaster),]$MutationTaster = 'D'))
 try(silent = T, (tier3_clean[grep('N', tier3_clean$MutationTaster),]$MutationTaster = 'N'))
 try(silent = T, (tier3_clean[grep('P', tier3_clean$MutationTaster),]$MutationTaster = 'P'))
 tier3_clean$MutationTaster <- factor(tier3_clean$MutationTaster, levels = c('D', 'A', 'N', 'P', '.')) 
@@ -569,8 +568,7 @@ Any of the following:
 
 ```{r table_3.1, echo=FALSE, message=FALSE}
 # tier3_mostdamg <- tier3_clean[tier3_clean$MutationTaster == 'D' & tier3_clean$SIFT == 'D' & tier3_clean$Polyphen2 == 'D',]
-tier3_mostdamg <- tier3_clean[tier3_clean$MutationTaster == "D" & tier3_clean$SIFT == "D" & tier3_clean$Polyphen2 == "D" &
-                                tier3_clean$dbSNP == "." & tier3_clean$AAchange != '.',]
+tier3_mostdamg <- tier3_clean[(tier3_clean$MutationTaster == "A" | tier3_clean$MutationTaster == "D") & tier3_clean$SIFT == "D" & tier3_clean$Polyphen2 == "D" & tier3_clean$dbSNP == "." & tier3_clean$AAchange != '.',]
 # order based on location
 tier3_mostdamg <- tier3_mostdamg[mixedorder(tier3_mostdamg$location),]
 rownames(tier3_mostdamg) <- c(1:nrow(tier3_mostdamg))
