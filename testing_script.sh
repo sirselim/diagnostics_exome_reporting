@@ -4,6 +4,11 @@
 # Last modified: 2018/04/12
 # Author: Miles Benton
 #
+# """
+# This script was created to automate the module scripts from the WES reporting pipeline.
+# It first asks the user for required information, seeks confirmation to proceed, and then
+# runs through all pipeline scripts to completion.
+# """
 
 ## LOGGING
 # Redirect stdout ( > ) into a named pipe ( >() ) running "tee"
