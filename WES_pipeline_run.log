@@ -1,0 +1,16 @@
+############################################################################
+## GRC Whole Exome Sequencing Annotation Filtering and Reporting Pipeline ##
+############################################################################
+## DATE: 04-12-2018
+## Run started: 16:29:45
+Run initiated by: 
+
+## You have entered the following details: 
+sampleID:  
+IonExpress Label:  
+runID: 
+genome: hg19 
+Tier0 gene list: gene_lists/ 
+Tier1 gene list: gene_lists/ 
+Directory for analysis:  
+

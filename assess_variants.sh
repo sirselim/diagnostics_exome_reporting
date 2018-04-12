@@ -1,7 +1,7 @@
 #!/bin/bash
 #
 # Created: 2016/04/04
-# Last modified: 2016/04/04
+# Last modified: 2018/04/11
 # Author: Miles Benton
 #
 # """
@@ -67,7 +67,7 @@ echo "...You are using $GENOME_BUILD..."
 # zcat "$INPUTFILE" | grep 'MutationAssessor_pred=H' | grep 'MutationTaster_pred=D' | grep -v 'rs[0-9]' | grep -P ';DP=[0-9]{2,}' > tmp_variants.txt
 # all variants
 # zcat "$INPUTFILE" | grep 'MutationAssessor_pred=H' | grep 'MutationTaster_pred=D' | grep -P ';DP=[2-90-9]{2,}' > tmp_variants.txt
-zcat "$INPUTFILE" | grep 'MutationAssessor_pred=H' | grep 'MutationTaster_pred=D' | grep -P ';DP=[0-9]{1,}' > tmp_variants.txt
+zcat "$INPUTFILE" | grep 'MutationAssessor_pred=H' | grep 'MutationTaster_pred=D\|MutationTaster_pred=A' | grep -P ';DP=[0-9]{1,}' > tmp_variants.txt
 
 VARNO=$(wc -l tmp_variants.txt | awk '{print $1}')
 
