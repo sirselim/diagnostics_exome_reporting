@@ -1,2 +1,6 @@
 FROM rink72/shiny
 
+COPY . /usr/src/app/
+WORKDIR /usr/src/app
+
+ENTRYPOINT [ "Rscript" "diagnostics_frontend_GUI.R"]
