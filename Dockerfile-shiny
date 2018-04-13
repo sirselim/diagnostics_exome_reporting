@@ -1,7 +1,7 @@
 FROM r-base:3.4.4
 
-COPY ./packages.txt /usr/src/requirements
-COPY ./r-packages.txt /usr/src/requirements
+COPY ./packages.txt /usr/src/requirements/
+COPY ./r-packages.txt /usr/src/requirements/
 
 WORKDIR /usr/src/requirements
 
