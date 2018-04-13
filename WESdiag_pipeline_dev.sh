@@ -51,13 +51,13 @@ echo "Directory for analysis: $sampleDIR "
 # can remove this eventually but retaining as sanity check for now
 echo ""
 # added a graphical prompt for user check
-#xmessage -center -buttons Yes,No -default No -center "Are these details correct and do you wish to proceed?"
-ans="$?"
-if [[ "$ans" == 101 ]]; then
-       :;
-else
-    exit;
-fi
+###xmessage -center -buttons Yes,No -default No -center "Are these details correct and do you wish to proceed?"
+###ans="$?"
+###if [[ "$ans" == 101 ]]; then
+###       :;
+###else
+###    exit;
+###fi
 # commandline user check 
 #echo "## Are these correct and do you wish to proceed?"
 #select yn in "Yes" "No"; do
@@ -80,6 +80,8 @@ echo "################# Setting up directory and pipeline files ################
 echo "############################################################################"
 # warn if no sampleID is provided
 [[ -z "$sampleID" ]] && { echo "...Please provide a WES sampleID..." ; exit 1; }
+
+sampleDIR=/data/sampledata
 # check for existing directory before creating
 if [ -d "$sampleDIR" ]
 then
@@ -91,7 +93,7 @@ fi
 echo "...cloning and extracting latest pipeline scripts and directories from GitHub..."
 # tar -C "$sampleDIR" -xzf GRC_wes_pipeline_files.tar.gz
 # replaced tar.gz with private GitHub repository for more detailed versioning 
-git clone git@github.com:sirselim/diagnostics_exome_reporting.git "$sampleDIR"
+#git clone git@github.com:sirselim/diagnostics_exome_reporting.git "$sampleDIR"
 # capture vcf and quality information files from 'raw' directory
 echo "...transfering required files..."
 # define the label and .vcf.gz string to narrow search
@@ -121,13 +123,13 @@ echo "...found quality information file: $TXTfile..."
 # check once again that this is the correct sample and file
 # ask for confirmation before proceeding
 echo ""
-#xmessage -center -buttons Yes,No -default No -center "Is this the correct file - $VCFFILE - and do you wish to proceed?"
-ans="$?"
-if [[ "$ans" == 101 ]]; then
-       echo "...continuing with WES pipeline..."; :;
-else
-   echo "...exiting WES pipline script..."; rm -R "$sampleDIR"; exit;
-fi
+###xmessage -center -buttons Yes,No -default No -center "Is this the correct file - $VCFFILE - and do you wish to proceed?"
+###ans="$?"
+###if [[ "$ans" == 101 ]]; then
+###       echo "...continuing with WES pipeline..."; :;
+###else
+###   echo "...exiting WES pipline script..."; rm -R "$sampleDIR"; exit;
+###fi
 #echo "## Is this the correct file - $VCFFILE - and do you wish to proceed?"
 #select yn in "Yes" "No"; do
 #    case $yn in
@@ -138,12 +140,15 @@ fi
 echo ""
 # copy these to correct location within sample directory
 # copy vcf file
+mkdir "$sampleDIR"/vcf/
+mkdir "$sampleDIR"/coverage_stats/
+
 cp "$VCFFILE" "$sampleDIR"/vcf/
 # copy quality statistics file
 cp "$TXTfile" "$sampleDIR"/coverage_stats/
 # message
 echo "...setup complete..."
-cd "$sampleDIR"
+###cd "$sampleDIR"
 echo "...moving to VCF annotation..."
 echo ""
 echo ""
