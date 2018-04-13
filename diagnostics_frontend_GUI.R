@@ -99,7 +99,7 @@ server = function(input, output) {
                                                  paste0('gene_lists/', input$geneList$name),
                                                  input$directory), file = "./pipeline_input.txt", 
                                                  col.names = FALSE, row.names = FALSE, quote = FALSE)
-                                  system("./testing_script.sh") })
+                                  system("./WESdiag_pipeline_dev.sh") })
   
 }
 ), host = "0.0.0.0",  port = 8080
