@@ -51,7 +51,7 @@ echo "Directory for analysis: $sampleDIR "
 # can remove this eventually but retaining as sanity check for now
 echo ""
 # added a graphical prompt for user check
-xmessage -center -buttons Yes,No -default No -center "Are these details correct and do you wish to proceed?"
+#xmessage -center -buttons Yes,No -default No -center "Are these details correct and do you wish to proceed?"
 ans="$?"
 if [[ "$ans" == 101 ]]; then
        :;
@@ -121,7 +121,7 @@ echo "...found quality information file: $TXTfile..."
 # check once again that this is the correct sample and file
 # ask for confirmation before proceeding
 echo ""
-xmessage -center -buttons Yes,No -default No -center "Is this the correct file - $VCFFILE - and do you wish to proceed?"
+#xmessage -center -buttons Yes,No -default No -center "Is this the correct file - $VCFFILE - and do you wish to proceed?"
 ans="$?"
 if [[ "$ans" == 101 ]]; then
        echo "...continuing with WES pipeline..."; :;
