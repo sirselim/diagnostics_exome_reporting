@@ -4,6 +4,9 @@ FROM r-base:3.4.4
 COPY . /usr/src/app/
 WORKDIR /usr/src/app
 
+RUN apt-get update && apt-get install -y `echo packages.txt`
+
+
 RUN PACKAGES=`cat r-packages.txt` && Rscript -e "install.packages(c($PACKAGES))"
 
 

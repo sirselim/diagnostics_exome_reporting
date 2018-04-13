@@ -1,1 +1,1 @@
-'shiny', 'shinycssloaders', 'tidyverse', 'magittr', 'gtools', 'stringr', 'pander'
+'shiny', 'shinycssloaders', 'tidyverse', 'magrittr', 'gtools', 'stringr', 'pander'
