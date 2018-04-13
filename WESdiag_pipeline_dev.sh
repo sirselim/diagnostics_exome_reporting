@@ -81,7 +81,7 @@ echo "##########################################################################
 # warn if no sampleID is provided
 [[ -z "$sampleID" ]] && { echo "...Please provide a WES sampleID..." ; exit 1; }
 
-sampleDIR=/data/sampledata
+sampleDIR=/tmp/sampledata
 # check for existing directory before creating
 if [ -d "$sampleDIR" ]
 then
@@ -93,7 +93,7 @@ fi
 echo "...cloning and extracting latest pipeline scripts and directories from GitHub..."
 # tar -C "$sampleDIR" -xzf GRC_wes_pipeline_files.tar.gz
 # replaced tar.gz with private GitHub repository for more detailed versioning 
-#git clone git@github.com:sirselim/diagnostics_exome_reporting.git "$sampleDIR"
+###git clone git@github.com:sirselim/diagnostics_exome_reporting.git "$sampleDIR"
 # capture vcf and quality information files from 'raw' directory
 echo "...transfering required files..."
 # define the label and .vcf.gz string to narrow search
