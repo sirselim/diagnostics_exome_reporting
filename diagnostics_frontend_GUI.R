@@ -102,6 +102,6 @@ server = function(input, output) {
                                   system("./testing_script.sh") })
   
 }
-)
+), port = 8080
 )
 ##/END
