@@ -1,14 +1,14 @@
 #!/bin/bash
 #
 # Created: 2016/02/10
-# Last modified: 2016/02/29
+# Last modified: 2018/04/17
 # Authors: Ray Blick, Miles Benton
-# Version: 0.2
+#
 # This is a major re-write of the basic script format, replaced while read; do loop 
 # to greatly increase processing speed. 
 #
 # """
-# This script pulls out information from vcf files.
+# This script extracts selected information from vcf files.
 # The script accepts 1 argument (file name).
 #
 # E.g. INPUT

@@ -1,7 +1,7 @@
 #!/bin/bash
 #
 # Created: 2016/02/19
-# Last modified: 2017/03/30
+# Last modified: 2018/04/17
 # Author: Miles Benton
 #
 # """
@@ -18,14 +18,6 @@
 INPUTFILE=$(ls -d vcf/* | grep "_dbSNP_VEP_dbNSFP.vcf.gz$")
 filename=$(echo "$INPUTFILE" | tr "/ && ." " " | awk '{printf $2}')
 
-#
-# diagnosticList="$2"		# tier0/diagnostic gene list - now defined previously
-# diagnosticGenes=$(echo "$diagnosticList" | sed 's/.txt//g')
-
-#
-# GENELIST="$3"	# tier1/disease specific gene list - now defined previously
-# genelist=$(echo "$GENELIST" | sed 's/.txt//g')
-
 # date
 DATE=$(date +%Y_%m_%d)
 
@@ -41,7 +33,7 @@ echo "...extracting software and database version information..."
 zcat vcf/"$filename".vcf.gz | grep '##' | grep 'VEP=\|SnpSiftV\|file\|source=\|parameters[A-Z]\|tmap\|reference=' > vcf/"$filename"_versions.txt
 
 # get vcf header for out files
-bcftools view -h vcf/"$filename".vcf.gz | tail -n 1 > vcf/vcf_header.txt
+"$BCFTOOLS" view -h vcf/"$filename".vcf.gz | tail -n 1 > vcf/vcf_header.txt
 
 ## Tier 0: Diagnostic Panel Genes
 # tier 0 filtering
@@ -56,7 +48,7 @@ echo "...filtering at tier 0: Diagnostic Panel Genes..."
 ### modified tabix version
 # replace grep filtering with tabix for speed
 zcat Homo_sapiens.GRCh37.87.genes.bed.gz | grep -w -f "$diagnosticList" | sort -k 1,1V -k2,2n -k3,3n > gene_lists/Diagnostics_gene_regions.txt
-tabix -R gene_lists/Diagnostics_gene_regions.txt vcf/"$filename".vcf.gz > results/Tier_0/"$filename"_Tier_0_results.vcf
+"$TABIX" -R gene_lists/Diagnostics_gene_regions.txt vcf/"$filename".vcf.gz > results/Tier_0/"$filename"_Tier_0_results.vcf
 # add header back for processing
 cat vcf/vcf_header.txt results/Tier_0/"$filename"_Tier_0_results.vcf > results/Tier_0/"$filename"_Tier_0_results_"$DATE".vcf
 ### ----------------------
@@ -82,7 +74,7 @@ echo "...filtering at tier 1: Disease Specific Genes..."
 ### modified tabix version
 # replace grep filtering with tabix for speed
 zcat Homo_sapiens.GRCh37.87.genes.bed.gz | grep -w -f "$GENELIST" | sort -k 1,1V -k2,2n -k3,3n > gene_lists/Tier1_gene_regions.txt
-tabix -R gene_lists/Tier1_gene_regions.txt vcf/"$filename".vcf.gz > results/Tier_1/"$filename"_Tier_1_results.vcf
+"$TABIX" -R gene_lists/Tier1_gene_regions.txt vcf/"$filename".vcf.gz > results/Tier_1/"$filename"_Tier_1_results.vcf
 # add header back for processing
 cat vcf/vcf_header.txt results/Tier_1/"$filename"_Tier_1_results.vcf > results/Tier_1/"$filename"_Tier_1_results_"$DATE".vcf
 ### ----------------------
@@ -113,7 +105,7 @@ mv gene_lists/wes_gene_lists/tmp_list.txt gene_lists/wes_gene_lists/pathways_lis
 echo "...filtering at tier 2: Pathway Specific Genes..."
 # replace grep filtering with tabix for speed
 zcat Homo_sapiens.GRCh37.87.genes.bed.gz | grep -w -f gene_lists/wes_gene_lists/pathways_list.txt | sort -k 1,1V -k2,2n -k3,3n > gene_lists/wes_gene_lists/pathway_gene_regions.txt
-tabix -R gene_lists/wes_gene_lists/pathway_gene_regions.txt vcf/"$filename".vcf.gz > results/Tier_2/"$filename"_Tier_2_results.vcf
+"$TABIX" -R gene_lists/wes_gene_lists/pathway_gene_regions.txt vcf/"$filename".vcf.gz > results/Tier_2/"$filename"_Tier_2_results.vcf
 # add header back for processing
 cat vcf/vcf_header.txt results/Tier_2/"$filename"_Tier_2_results.vcf > results/Tier_2/"$filename"_Tier_2_results_"$DATE".vcf
 # clean up 
@@ -138,7 +130,7 @@ cat gene_lists/diagnostic_panel.txt gene_lists/test_genes_updated.txt gene_lists
 echo "...filtering at tier 3: All Other Genes..."
 # replace grep filtering with tabix for speed, take inverse here to get remaining genes/variants
 zcat Homo_sapiens.GRCh37.87.genes.bed.gz | grep -w -v -f gene_lists/filtered_list.txt | sort -k 1,1V -k2,2n -k3,3n > gene_lists/remaining_variant_regions.txt
-tabix -R gene_lists/remaining_variant_regions.txt vcf/"$filename".vcf.gz > results/Tier_3/"$filename"_Tier_3_results.vcf
+"$TABIX" -R gene_lists/remaining_variant_regions.txt vcf/"$filename".vcf.gz > results/Tier_3/"$filename"_Tier_3_results.vcf
 # add header back for processing
 cat vcf/vcf_header.txt results/Tier_3/"$filename"_Tier_3_results.vcf > results/Tier_3/"$filename"_Tier_3_results_"$DATE".vcf
 # clean up
