@@ -7,7 +7,7 @@
 # load packages
 require(shiny)
 require(shinycssloaders)
-require(tidyverse)
+require(magrittr)
 # require(shinyjs)
 # define ui and server
 runApp(list(ui = pageWithSidebar(
@@ -99,7 +99,7 @@ server = function(input, output) {
                                                  paste0('gene_lists/', input$geneList$name),
                                                  input$directory), file = "./pipeline_input.txt", 
                                                  col.names = FALSE, row.names = FALSE, quote = FALSE)
-                                  system("./testing_script.sh") })
+                                  system("./WESdiag_pipeline_dev.sh") })
   
 }
 )

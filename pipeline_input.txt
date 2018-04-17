@@ -1,0 +1,8 @@
+Miles Benton
+DG1050
+025
+wes_run_001
+hg19
+gene_lists/diagnostic_panel.txt
+gene_lists/test_genes_updated.txt
+DG1050_180413
