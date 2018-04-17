@@ -15,7 +15,7 @@
 # Redirect stdout ( > ) into a named pipe ( >() ) running "tee"
 exec > >(tee -i WES_pipeline_run.log)
 exec 2>&1
-# Everything below will go to the file 'WES_pipeline_run.log':
+Everything below will go to the file 'WES_pipeline_run.log':
 ##
 
 ## [0] required user input
