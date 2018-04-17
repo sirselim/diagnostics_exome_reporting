@@ -4,6 +4,9 @@
 ## configuration file for diagnostic pipeline
 ####
 
+# set number of threads to use
+THREADS="12"
+
 # set paths to software
 SNPEFF="/data/all/programs/snpeff/snpEff/snpEff.jar"
 SNPSIFT="/data/all/programs/snpeff/snpEff/SnpSift.jar"
