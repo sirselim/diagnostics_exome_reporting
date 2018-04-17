@@ -50,15 +50,15 @@ echo "Tier1 gene list: $GENELIST "
 echo "Directory for analysis: $sampleDIR "#!/bin/bash
 # ask for confirmation before proceeding
 # can remove this eventually but retaining as sanity check for now
-echo ""
-# added a graphical prompt for user check
-xmessage -center -buttons Yes,No -default No -center "Are these details correct and do you wish to proceed?"
-ans="$?"
-if [[ "$ans" == 101 ]]; then
-       :;
-else
-    exit;
-fi
+# echo ""
+# # added a graphical prompt for user check
+# xmessage -center -buttons Yes,No -default No -center "Are these details correct and do you wish to proceed?"
+# ans="$?"
+# if [[ "$ans" == 101 ]]; then
+#        :;
+# else
+#     exit;
+# fi
 # commandline user check 
 #echo "## Are these correct and do you wish to proceed?"
 #select yn in "Yes" "No"; do
@@ -121,16 +121,16 @@ TXTfile=$(ls -d ./raw_wes_files/* | grep "$sampleID" | grep '.txt')
 echo "...found quality information file: $TXTfile..."
 # check once again that this is the correct sample and file
 # ask for confirmation before proceeding
-echo ""
-xmessage -center -buttons Yes,No -default No -center "Is this the correct file - $VCFFILE - and do you wish to proceed?"
-ans="$?"
-if [[ "$ans" == 101 ]]; then
-       echo "...continuing with WES pipeline..."; :;
-else
-   echo "...exiting WES pipline script..."; rm -R "$sampleDIR"; exit;
-fi
-#echo "## Is this the correct file - $VCFFILE - and do you wish to proceed?"
-#select yn in "Yes" "No"; do
+# ECHO ""
+# XMESSAGE -CENTER -BUTTONS YES,NO -DEFAULT NO -CENTER "IS THIS THE CORRECT FILE - $VCFFILE - AND DO YOU WISH TO PROCEED?"
+# ANS="$?"
+# IF [[ "$ANS" == 101 ]]; THEN
+#        ECHO "...CONTINUING WITH WES PIPELINE..."; :;
+# ELSE
+#    ECHO "...EXITING WES PIPLINE SCRIPT..."; RM -R "$SAMPLEDIR"; EXIT;
+# FI
+#echo "## Is this the correct file - $VCFFILE - and do you WISH to proceed?"
+#select yn in "Yes" "NO"; do
 #    case $yn in
 #        Yes ) echo "...continuing with WES pipeline..."; break;;
 #        No ) echo "...exiting WES pipline script..."; rm -R "$sampleDIR"; exit;;
