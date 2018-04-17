@@ -179,15 +179,14 @@ echo "##########################################################################
 echo "####################### dbSNP information annotation #######################"
 echo "############################################################################"
 echo "...annotating with dbSNP..."
-java -jar /home/miles/install/snpEff/SnpSift.jar annotate /data/all/ncbi/hg19/All_20151104.vcf.gz vcf/"$filename".vcf.gz > vcf/"$filename"_dbSNP.vcf
+java -jar "$SNPSIFT" annotate "$DBSNP_DATA" vcf/"$filename".vcf.gz > vcf/"$filename"_dbSNP.vcf
 ## annotate with VEP
 echo ""
 echo "############################################################################"
 echo "############################## VEP annotation ##############################"
 echo "############################################################################"
 echo "...annotating with VEP..."
-perl /data/all/programs/VEP/vep-87-github-release/vep.pl --assembly GRCh37 --fasta /ramdisk/hg19_mod.fa.gz --cache --merged -i vcf/"$filename"_dbSNP.vcf \
---offline --stats_text --everything -o vcf/"$filename"_dbSNP_VEP.vcf --vcf --dir /data/all/VEPdata --fork 10 --force_overwrite
+perl "$VEP" --assembly GRCh37 --fasta "$FASTA_REF" --cache --merged -i vcf/"$filename"_dbSNP.vcf --offline --stats_text --everything -o vcf/"$filename"_dbSNP_VEP.vcf --vcf --dir "$VEP_DATA" --fork 10 --force_overwrite
 ## SNPSift dbNSFP
 echo ""
 echo "############################################################################"
@@ -196,13 +195,13 @@ echo "##########################################################################
 echo "...annotating with SnpSift dbNSFP..."
 # split on chr
 # can greatly speed up the process by first splitting the vcf 
-java -jar /home/miles/install/snpEff/SnpSift.jar split vcf/"$filename"_dbSNP_VEP.vcf
+java -jar "$SNPSIFT" split vcf/"$filename"_dbSNP_VEP.vcf
 # create list of chr vcf files
 find vcf/"$filename"_dbSNP_VEP.chr* -maxdepth 1 -type f -printf '%f\n' > chr_list.txt
 # run in parallel
-cat chr_list.txt | parallel -j 12 'java -jar /home/miles/install/snpEff/SnpSift.jar dbnsfp -v -db /data/all/dbNSFP/hg19/dbNSFP.txt.gz vcf/{} > vcf/test_{}'
+cat chr_list.txt | parallel -j 12 'java -jar "$SNPSIFT" dbnsfp -v -db "$DBNSFP" vcf/{} > vcf/test_{}'
 # join them back together
-java -jar /home/miles/install/snpsift/SnpSift.jar split -j vcf/test_* > vcf/"$filename"_dbSNP_VEP_dbNSFP.vcf
+java -jar "$SNPSIFT" split -j vcf/test_* > vcf/"$filename"_dbSNP_VEP_dbNSFP.vcf
 # clean up
 rm chr_list.txt
 rm vcf/test_*
@@ -210,20 +209,20 @@ rm vcf/*.chr*
 ## NOTE: this section needs feature devleopment
 ## only available when annotating against hg38 
 ## SNPSift gwascatalog
-# java -jar /home/miles/install/snpEff/SnpSift.jar gwasCat -db /data/all/dbNSFP/gwascatalog/gwascatalog.txt vcf/"$filename"_dbSNP_VEP_dbNSFP.vcf > vcf/"$filename"_dbSNP_VEP_dbNSFP_gwas.vcf
+# java -jar "$SNPSIFT" gwasCat -db /data/all/dbNSFP/gwascatalog/gwascatalog.txt vcf/"$filename"_dbSNP_VEP_dbNSFP.vcf > vcf/"$filename"_dbSNP_VEP_dbNSFP_gwas.vcf
 # this only seems to be annotated at hg38 level
 ## bgzip step to compress
 echo "...compressing to vcf.gz..."
-bgzip -c vcf/"$filename"_dbSNP_VEP_dbNSFP.vcf > vcf/"$filename"_dbSNP_VEP_dbNSFP.vcf.gz
-tabix -p vcf vcf/"$filename"_dbSNP_VEP_dbNSFP.vcf.gz
+"$BGZIP" -c vcf/"$filename"_dbSNP_VEP_dbNSFP.vcf > vcf/"$filename"_dbSNP_VEP_dbNSFP.vcf.gz
+"$TABIX" -p vcf vcf/"$filename"_dbSNP_VEP_dbNSFP.vcf.gz
 # add additional GENE annotation to INFO (currently only hg19)
 echo ""
 echo "############################################################################"
 echo "######################### custom gene annotation ###########################"
 echo "############################################################################"
-bcftools annotate -a UCSC_wholegenes.bed.gz -c CHROM,FROM,TO,GENE -h <(echo '##INFO=<ID=GENE,Number=1,Type=String,Description="Gene symbol">') vcf/"$filename"_dbSNP_VEP_dbNSFP.vcf.gz > vcf/"$filename"_dbSNP_VEP_dbNSFP.vcf
-bgzip -c vcf/"$filename"_dbSNP_VEP_dbNSFP.vcf > vcf/"$filename"_dbSNP_VEP_dbNSFP.vcf.gz
-tabix -p vcf vcf/"$filename"_dbSNP_VEP_dbNSFP.vcf.gz
+"$BCFTOOLS" annotate -a UCSC_wholegenes.bed.gz -c CHROM,FROM,TO,GENE -h <(echo '##INFO=<ID=GENE,Number=1,Type=String,Description="Gene symbol">') vcf/"$filename"_dbSNP_VEP_dbNSFP.vcf.gz > vcf/"$filename"_dbSNP_VEP_dbNSFP.vcf
+"$BGZIP" -c vcf/"$filename"_dbSNP_VEP_dbNSFP.vcf > vcf/"$filename"_dbSNP_VEP_dbNSFP.vcf.gz
+"$TABIX" -p vcf vcf/"$filename"_dbSNP_VEP_dbNSFP.vcf.gz
 # final clean up
 rm vcf/"$filename"_dbSNP.vcf
 rm vcf/"$filename"_dbSNP_VEP.vcf
