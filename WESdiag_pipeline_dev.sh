@@ -24,6 +24,7 @@ echo "## GRC Whole Exome Sequencing Annotation Filtering and Reporting Pipeline 
 echo "############################################################################"
 # set up time and date
 RUNTIME=$(date +"%H:%M:%S")
+RUNTIME_START=$(date +"%H:%M:%S" | awk -F: '{print ($1 * 3600) + ($2 * 60) + $3 }')
 DATE=$(date +"%m-%d-%Y")
 echo "## DATE: $DATE"
 echo "## Run started: $RUNTIME"
@@ -294,15 +295,19 @@ echo ""
 
 ## move log file into current directory
 RUNTIME=$(date +"%H:%M:%S")
+RUNTIME_END=$(date +"%H:%M:%S" | awk -F: '{print ($1 * 3600) + ($2 * 60) + $3 }')
+# calculate total run time in seconds
+TOTAL_TIME=$(echo $(("$RUNTIME_END"-"$RUNTIME_START")))
 DATE=$(date +"%m-%d-%Y")
 echo "...outputting log file..."
-LOGFILE=$(ls -d ../*.log)
+LOGFILE=$(ls -d ./*.log)
 echo "...$LOGFILE has been created..."
 mv "$LOGFILE" .
 LOGFILE=$(ls *.log)
 LOGOUT=$(paste -d'_' <(echo "$sampleID") <(echo "$LOGFILE"))
 mv "$LOGFILE" "$LOGOUT"
 echo "...Pipeline run of $sampleID finished on $DATE at $RUNTIME..."
+echo "...Total run time was $TOTAL_TIME seconds..."
 echo ""
 ##
 ## To-do: add a step to zip the sample directory and then organise a transfer 
