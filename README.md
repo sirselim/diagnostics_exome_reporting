@@ -12,3 +12,6 @@ Pipeline to filter variant called format (vcf) files and generate a report docum
   - [ ] create a configuration file to allow users to set paths to software and databases (temp)
   - [ ] remove all hard-coded paths (software, databases and directories)  
   - [ ] implement selection of genome build (currently only hg19 is working)
+  - [ ] remove the xmessage checks
+    + [ ] decide if we need to have user checks at these two locations
+  - [ ] integrate docker branch (this is likely to address some/all above concerns)
