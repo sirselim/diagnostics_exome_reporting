@@ -5,7 +5,8 @@
 ####
 
 # set paths to software
-SNPSIFT="/home/miles/install/snpEff/SnpSift.jar"
+SNPEFF="/data/all/programs/snpeff/snpEff/snpEff.jar"
+SNPSIFT="/data/all/programs/snpeff/snpEff/SnpSift.jar"
 VEP="/data/all/programs/VEP/vep-87-github-release/vep.pl"
 BGZIP="/usr/local/bin/bgzip"
 TABIX="/usr/local/bin/tabix"
