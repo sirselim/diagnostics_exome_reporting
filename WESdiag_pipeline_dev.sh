@@ -1,13 +1,14 @@
 #!/bin/bash
 #
 # Created: 2018/04/11
-# Last modified: 2018/04/12
+# Last modified: 2018/04/17
 # Author: Miles Benton
 #
 # """
 # This script was created to automate the module scripts from the WES reporting pipeline.
 # It first asks the user for required information, seeks confirmation to proceed, and then
-# runs through all pipeline scripts to completion.
+# runs through all pipeline scripts to completion. The latest update has added a Shiny GUI
+# which takes user input and writes variables to a file which bash then accepts. 
 # """
 
 ## LOGGING
@@ -15,6 +16,13 @@
 exec > >(tee -i WES_pipeline_run.log)
 exec 2>&1
 # Everything below will go to the file 'WES_pipeline_run.log':
+##
+
+##
+# source configuration file to set software and database paths
+# users should edit configuration.sh accordingly
+echo "...reading in configuration options..."
+. ./configuration.sh
 ##
 
 ## [0] required user input
@@ -46,7 +54,7 @@ echo "runID: $RUNID"
 echo "genome: $GENOME_BUILD "
 echo "Tier0 gene list: $diagnosticList "
 echo "Tier1 gene list: $GENELIST "
-echo "Directory for analysis: $sampleDIR "
+echo "Directory for analysis: $sampleDIR "#!/bin/bash
 # ask for confirmation before proceeding
 # can remove this eventually but retaining as sanity check for now
 echo ""
@@ -266,7 +274,7 @@ echo ""
 
 ## [5] create final report (docx) using RMarkdown
 # call upon wes_reporting.R
-echo "############################################################################"
+echo "################################################ ############################"
 echo "####################### Generating the final report ########################"
 echo "############################################################################"
 # message

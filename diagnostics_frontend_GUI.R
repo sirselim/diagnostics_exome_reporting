@@ -2,7 +2,7 @@
 # front-end GUI for variant annotation and reporting tool
 # author: Miles Benton
 # created: 180411
-# modified: 180411 
+# modified: 180417
 
 # load packages
 require(shiny)
@@ -18,7 +18,7 @@ runApp(list(ui = pageWithSidebar(
     textInput("user", "User Name", ""),
     textInput("sample", "Sample ID", ""),
     # comment about filename matching, can match any string from a given file in both 'barcode' and 'runID' values
-    textInput("barcode", "IonExpress Label", ""),
+    textInput("barcode", "Label (i.e. barcode)", ""),
     textInput("runID", "Run ID", ""),
     # textInput("build", "Genome Build", ""),
     selectInput("build", "Genome Build", choices = c('hg19', 'hg38')),
@@ -72,7 +72,7 @@ runApp(list(ui = pageWithSidebar(
     br(),
     conditionalPanel(condition="$('html').hasClass('shiny-busy')",
                      tags$div("Running..." %>%
-                                withSpinner(color = "#0dc5c1", size = 2, type = 4) ,id="loadmessage")) 
+                                withSpinner(color = "#0dc5c1", size = 2, type = 4), id="loadmessage")) 
     
     )
 ),
