@@ -19,3 +19,4 @@ Pipeline to filter variant called format (vcf) files and generate a report docum
   - [ ] remove the xmessage checks
     + [ ] decide if we need to have user checks at these two locations
   - [ ] integrate docker branch (this is likely to address some/all above concerns)
+  - [ ] ensure the log files are being moved back into the correct location

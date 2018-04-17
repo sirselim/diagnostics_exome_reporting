@@ -14,6 +14,7 @@ VEP="/data/all/programs/VEP/vep-87-github-release/vep.pl"
 BGZIP="/usr/local/bin/bgzip"
 TABIX="/usr/local/bin/tabix"
 BCFTOOLS="/usr/bin/bcftools"
+VCFSORT="/usr/bin/vcf-sort"
 
 # set paths to database directories
 DBSNP_DATA="/data/all/ncbi/hg19/All_20170710.vcf.gz"

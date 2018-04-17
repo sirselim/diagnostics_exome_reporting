@@ -162,6 +162,7 @@ export LC_ALL=C
 # users should edit configuration.sh accordingly
 echo "...reading in configuration options..."
 . ./configuration.sh
+echo ""
 ##
 echo "############################################################################"
 echo "###################### Performing VCF file annotation ######################"
@@ -169,6 +170,14 @@ echo "##########################################################################
 # define the sample being processed
 INPUTFILE=$(ls -d vcf/* | grep "$sampleID" | grep "$LABELID" | grep '.vcf.gz')
 filename=$(echo "$INPUTFILE" | tr "/ && ." " " | awk '{printf $2}')
+# sort vcf file by chrom position (faster for VEP annotation) and index
+# message
+echo "...sorting and indexing VCF file of sample $filename..."
+echo ""
+"$VCFSORT" -c vcf/"$filename".vcf.gz | "$BGZIP" -c > tmp.vcf.gz
+mv tmp.vcf.gz vcf/"$filename".vcf.gz
+"$TABIX" vcf/"$filename".vcf.gz
+#
 # message
 echo "...starting annotation of sample $filename..."
 echo ""
