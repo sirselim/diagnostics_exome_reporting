@@ -18,13 +18,6 @@ exec 2>&1
 # Everything below will go to the file 'WES_pipeline_run.log':
 ##
 
-##
-# source configuration file to set software and database paths
-# users should edit configuration.sh accordingly
-echo "...reading in configuration options..."
-. ./configuration.sh
-##
-
 ## [0] required user input
 echo "############################################################################"
 echo "## GRC Whole Exome Sequencing Annotation Filtering and Reporting Pipeline ##"
@@ -164,7 +157,12 @@ echo ""
 # """
 # set perl locale
 export LC_ALL=C
-#
+##
+# source configuration file to set software and database paths
+# users should edit configuration.sh accordingly
+echo "...reading in configuration options..."
+. ./configuration.sh
+##
 echo "############################################################################"
 echo "###################### Performing VCF file annotation ######################"
 echo "############################################################################"
