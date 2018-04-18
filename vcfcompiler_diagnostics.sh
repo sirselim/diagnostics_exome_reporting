@@ -1,7 +1,7 @@
 #!/bin/bash
 #
 # Created: 2016/02/10
-# Last modified: 2018/04/17
+# Last modified: 2018/04/19
 # Authors: Ray Blick, Miles Benton
 #
 # This is a major re-write of the basic script format, replaced while read; do loop 

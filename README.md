@@ -1,5 +1,5 @@
 # diagnostics_exome_reporting
-Pipeline to filter variant called format (vcf) files and generate a report document for clinical diagnostics.
+Pipeline to annotate and filter variant called format (vcf) files and generate a report document for clinical diagnostics. The variant annotation and filtering pipeline now uses a web server GUI implemented in R Shiny. 
 
 # Current to-do list and fixes pending
 
@@ -13,8 +13,8 @@ Pipeline to filter variant called format (vcf) files and generate a report docum
   - [ ] remove all hard-coded paths (software, databases and directories)
     + [x] ~~remove from the main bash script (`WESdiag_pipeline_dev.sh`)~~
     + [ ] remove from `wes_vcffiltering.sh`
-    + [ ] remove from `assess_variants.sh`
-    + [ ] remove from `vcfcompiler_diagnostics.sh`
+    + [x] ~~remove from `assess_variants.sh`~~
+    + [x] ~~remove from `vcfcompiler_diagnostics.sh`~~
   - [ ] implement selection of genome build (currently only hg19 is working)
   - [x] ~~remove the xmessage checks (relies on having X11 environment installed, not ideal)~~
     + [x] ~~decide if we need to have user checks at these two locations~~
@@ -24,6 +24,8 @@ Pipeline to filter variant called format (vcf) files and generate a report docum
     + [x] ~~add home directory variable to set location for data and scripts~~
     + [x] ~~test working when deployed remotely~~
   - [x] ~~added code to set working dir to main script location~~
+  - [ ] add more extracted features to the `vcfcompiler_diagnostics.sh` script (i.e. CADD score)
   - [ ] add user defined option for the 3rd tier gene list
+    + [ ] add integration with a self contained and user curated gene list repository 
   - [ ] evaluate whether we need to continue to allow the user to define the 'home' dir
   - [ ] integrate docker branch (this is likely to address some/all above concerns)
