@@ -1,7 +1,7 @@
 #!/bin/bash
 #
 # Created: 2018/04/11
-# Last modified: 2018/04/17
+# Last modified: 2018/04/18
 # Author: Miles Benton
 #
 # """
@@ -304,6 +304,12 @@ RUNTIME_END=$(date +"%H:%M:%S" | awk -F: '{print ($1 * 3600) + ($2 * 60) + $3 }'
 # calculate total run time in seconds
 TOTAL_TIME=$(echo $(("$RUNTIME_END"-"$RUNTIME_START")))
 DATE=$(date +"%m-%d-%Y")
+####
+## TESTING - check current working dir 
+echo "....TESTING...."
+echo $PWD
+echo "....TESTING...."
+####
 echo "...outputting log file..."
 LOGFILE=$(ls -d ./*pipeline_run.log)
 echo "...$LOGFILE has been created..."
