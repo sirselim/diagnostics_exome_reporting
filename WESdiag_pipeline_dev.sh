@@ -93,7 +93,9 @@ fi
 echo "...cloning and extracting latest pipeline scripts and directories from GitHub..."
 # tar -C "$sampleDIR" -xzf GRC_wes_pipeline_files.tar.gz
 # replaced tar.gz with private GitHub repository for more detailed versioning 
-git clone git@github.com:sirselim/diagnostics_exome_reporting.git "$sampleDIR"
+# git clone git@github.com:sirselim/diagnostics_exome_reporting.git "$sampleDIR"
+# current work-around: make sure to have cloned the repo into home directory beforehand
+cp -r diagnostics_exome_reporting "$sampleDIR"
 # capture vcf and quality information files from 'raw' directory
 echo "...transfering required files..."
 # define the label and .vcf.gz string to narrow search
