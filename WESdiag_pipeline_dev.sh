@@ -311,7 +311,7 @@ echo $PWD
 echo "....TESTING...."
 ####
 echo "...outputting log file..."
-LOGFILE=$(ls -d ./*pipeline_run.log)
+LOGFILE=$(ls -d ../*pipeline_run.log)
 echo "...$LOGFILE has been created..."
 mv "$LOGFILE" .
 LOGFILE=$(ls *.log)
