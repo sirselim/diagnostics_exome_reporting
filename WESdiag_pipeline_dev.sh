@@ -305,7 +305,7 @@ RUNTIME_END=$(date +"%H:%M:%S" | awk -F: '{print ($1 * 3600) + ($2 * 60) + $3 }'
 TOTAL_TIME=$(echo $(("$RUNTIME_END"-"$RUNTIME_START")))
 DATE=$(date +"%m-%d-%Y")
 echo "...outputting log file..."
-LOGFILE=$(ls -d ./*.log)
+LOGFILE=$(ls -d ./*pipeline_run.log)
 echo "...$LOGFILE has been created..."
 mv "$LOGFILE" .
 LOGFILE=$(ls *.log)
