@@ -52,7 +52,7 @@ echo "genome: $GENOME_BUILD "
 echo "Tier0 gene list: $diagnosticList "
 echo "Tier1 gene list: $GENELIST "
 echo "Directory for analysis: $sampleDIR "#!/bin/bash
-# ask for confirmation before proceeding
+# ask for confirmation before proceedingChoo2geez=ai0g
 # can remove this eventually but retaining as sanity check for now
 # echo ""
 # # added a graphical prompt for user check
