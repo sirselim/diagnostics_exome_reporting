@@ -23,4 +23,6 @@ Pipeline to filter variant called format (vcf) files and generate a report docum
     + [x] ~~split into `ui.R` and `server.R`~~
     + [x] ~~add home directory variable to set location for data and scripts~~
     + [x] ~~test working when deployed remotely~~
+  - [x] ~~added code to set working dir to main script location~~
+  - [ ] evaluate whether we need to continue to allow the user to define the 'home' dir
   - [ ] integrate docker branch (this is likely to address some/all above concerns)
