@@ -18,11 +18,12 @@ Pipeline to filter variant called format (vcf) files and generate a report docum
   - [ ] implement selection of genome build (currently only hg19 is working)
   - [x] ~~remove the xmessage checks (relies on having X11 environment installed, not ideal)~~
     + [x] ~~decide if we need to have user checks at these two locations~~
-  - [ ] ensure the log files are being moved back into the correct location
+  - [x] ~~ensure the log files are being moved back into the correct location~~
   - [x] ~~overhaul Shiny script to allow hosting via Shiny Server~~ 
     + [x] ~~split into `ui.R` and `server.R`~~
     + [x] ~~add home directory variable to set location for data and scripts~~
     + [x] ~~test working when deployed remotely~~
   - [x] ~~added code to set working dir to main script location~~
+  - [ ] add user defined option for the 3rd tier gene list
   - [ ] evaluate whether we need to continue to allow the user to define the 'home' dir
   - [ ] integrate docker branch (this is likely to address some/all above concerns)
