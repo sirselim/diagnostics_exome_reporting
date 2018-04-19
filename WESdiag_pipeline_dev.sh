@@ -1,7 +1,7 @@
 #!/bin/bash
 #
 # Created: 2018/04/11
-# Last modified: 2018/04/18
+# Last modified: 2018/04/19
 # Author: Miles Benton
 #
 # """
@@ -99,9 +99,10 @@ fi
 echo "...cloning and extracting latest pipeline scripts and directories from GitHub..."
 # tar -C "$sampleDIR" -xzf GRC_wes_pipeline_files.tar.gz
 # replaced tar.gz with private GitHub repository for more detailed versioning 
-git clone git@github.com:sirselim/diagnostics_exome_reporting.git "$sampleDIR"
-# current work-around: make sure to have cloned the repo into home directory beforehand
-# cp -r diagnostics_exome_reporting "$sampleDIR"
+# git clone git@github.com:sirselim/diagnostics_exome_reporting.git "$sampleDIR"
+## testing the feature branch
+git clone git@github.com:sirselim/diagnostics_exome_reporting.git --branch user-defined-tiers --single-branch "$sampleDIR"
+##
 # capture vcf and quality information files from 'raw' directory
 echo "...transfering required files..."
 # define the label and .vcf.gz string to narrow search
