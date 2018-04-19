@@ -1,7 +1,7 @@
 # diagnostics_exome_reporting
 Pipeline to annotate and filter variant called format (vcf) files and generate a report document for clinical diagnostics. The variant annotation and filtering pipeline now uses a web server GUI implemented in R Shiny. 
 
-# Current to-do list and fixes pending
+# Current to-do list and fixes/features pending
 
   - [x] ~~GitHub repo requires ssh passphrase each use~~  
   - [x] ~~issue with grep using gene lists (files) and vcf.gz~~  
@@ -26,6 +26,7 @@ Pipeline to annotate and filter variant called format (vcf) files and generate a
   - [x] ~~added code to set working dir to main script location~~
   - [ ] add more extracted features to the `vcfcompiler_diagnostics.sh` script (i.e. CADD score)
   - [ ] add user defined option for the 3rd tier gene list
+    + [ ] create a feature branch for this to be implemented 
     + [ ] add integration with a self contained and user curated gene list repository 
   - [ ] evaluate whether we need to continue to allow the user to define the 'home' dir
   - [ ] integrate docker branch (this is likely to address some/all above concerns)
