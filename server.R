@@ -14,8 +14,9 @@ function(input, output) {
     output$barcode.value <- eventReactive(input$updateButton, { input$barcode } )
     output$runID.value <- eventReactive(input$updateButton, { input$runID } )
     output$build.value <- eventReactive(input$updateButton, { input$build } )
-    output$diagGenes.value <- eventReactive(input$updateButton, { paste0('gene_lists/', input$diagGenes$name) } ) # sets directory structure
-    output$geneList.value <- eventReactive(input$updateButton, { paste0('gene_lists/', input$geneList$name) } )   # sets directory structure
+    output$tier0List.value <- eventReactive(input$updateButton, { paste0('gene_lists/', input$tier0List$name) } ) # sets directory structure
+    output$tier1List.value <- eventReactive(input$updateButton, { paste0('gene_lists/', input$tier1List$name) } ) # sets directory structure
+    output$tier2List.value <- eventReactive(input$updateButton, { paste0('gene_lists/', input$tier2List$name) } ) # sets directory structure
     output$dir.value <- eventReactive(input$updateButton, { input$directory } )
     
     # generate output for bash script and then initiate the pipeline
@@ -24,8 +25,9 @@ function(input, output) {
                                                      input$barcode,
                                                      input$runID,
                                                      input$build,
-                                                     paste0('gene_lists/', input$diagGenes$name),
-                                                     paste0('gene_lists/', input$geneList$name),
+                                                     paste0('gene_lists/', input$tier0List$name),
+                                                     paste0('gene_lists/', input$tier1List$name),
+                                                     paste0('gene_lists/', input$tier2List$name),
                                                      input$directory), file = paste0(input$HomeDirectory, "pipeline_input.txt"), 
                                                col.names = FALSE, row.names = FALSE, quote = FALSE)
       system(paste0(input$HomeDirectory, "./WESdiag_pipeline_dev.sh")) })

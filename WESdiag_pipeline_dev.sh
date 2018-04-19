@@ -40,18 +40,21 @@ sampleID=$(sed '2q;d' pipeline_input.txt)
 LABELID=$(sed '3q;d' pipeline_input.txt)
 RUNID=$(sed '4q;d' pipeline_input.txt)
 GENOME_BUILD=$(sed '5q;d' pipeline_input.txt)
-diagnosticList=$(sed '6q;d' pipeline_input.txt)
-GENELIST=$(sed '7q;d' pipeline_input.txt)
-sampleDIR=$(sed '8q;d' pipeline_input.txt)
+TIER0LIST=$(sed '6q;d' pipeline_input.txt)
+TIER1LIST=$(sed '7q;d' pipeline_input.txt)
+TIER2LIST=$(sed '8q;d' pipeline_input.txt)
+sampleDIR=$(sed '9q;d' pipeline_input.txt)
 # overview variables for confirmation
 echo "## You have entered the following details: "
 echo "sampleID: $sampleID "
-echo "IonExpress Label: $LABELID "
+echo "Label (i.e. barcode): $LABELID "
 echo "runID: $RUNID"
 echo "genome: $GENOME_BUILD "
-echo "Tier0 gene list: $diagnosticList "
-echo "Tier1 gene list: $GENELIST "
-echo "Directory for analysis: $sampleDIR "#!/bin/bash
+echo "Tier0 gene list: $TIER0LIST "
+echo "Tier1 gene list: $TIER1LIST "
+echo "Tier2 gene list: $TIER2LIST "
+echo "Directory for analysis: $sampleDIR "
+## removed user check (relied on xmessage thus X11 env)
 # ask for confirmation before proceedingChoo2geez=ai0g
 # can remove this eventually but retaining as sanity check for now
 # echo ""
@@ -125,6 +128,7 @@ fi
 # if there are txt files for the same sample then we have a problem
 TXTfile=$(ls -d ./raw_wes_files/* | grep "$sampleID" | grep '.txt')
 echo "...found quality information file: $TXTfile..."
+## removed user check (relied on xmessage thus X11 env)
 # check once again that this is the correct sample and file
 # ask for confirmation before proceeding
 # ECHO ""

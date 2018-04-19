@@ -20,16 +20,15 @@ pageWithSidebar(
     # comment about filename matching, can match any string from a given file in both 'barcode' and 'runID' values
     textInput("barcode", "Label (i.e. barcode)", ""),
     textInput("runID", "Run ID", ""),
-    # textInput("build", "Genome Build", ""),
     selectInput("build", "Genome Build", choices = c('hg19', 'hg38')),
-    # textInput("diagGenes", "Diagnostic Gene List", ""),
-    fileInput("diagGenes", "Choose tier 0 gene list",
+    fileInput("tier0List", "Choose Tier 0 gene list",
               accept = c("text/csv", "text/comma-separated-values,text/plain", ".csv")),
-    # textInput("geneList", "User Defined Gene List", ""),
-    fileInput("geneList", "Choose tier 1 gene list",
+    fileInput("tier1List", "Choose Tier 1 gene list",
+              accept = c("text/csv", "text/comma-separated-values,text/plain", ".csv")),
+    fileInput("tier2List", "Choose Tier 2 gene list",
               accept = c("text/csv", "text/comma-separated-values,text/plain", ".csv")),
     textInput("directory", "Output Directory Name", ""),
-    br(),
+    # br(),
     actionButton("updateButton", "Update details"),
     helpText("Click to update values displayed in the main panel.")
     
@@ -45,8 +44,9 @@ pageWithSidebar(
     div(id="container", strong('Selected barcode:'), textOutput("barcode.value")),
     div(id="container", strong('Selected run ID:'), textOutput("runID.value")),
     div(id="container", strong('Selected genome build:'), textOutput("build.value")),
-    div(id="container", strong('Selected tier 0 gene list:'), textOutput("diagGenes.value")),
-    div(id="container", strong('Selected tier 1 gene list:'), textOutput("geneList.value")),
+    div(id="container", strong('Selected tier 0 gene list:'), textOutput("tier0List.value")),
+    div(id="container", strong('Selected tier 1 gene list:'), textOutput("tier1List.value")),
+    div(id="container", strong('Selected tier 2 gene list:'), textOutput("tier2List.value")),
     div(id="container", strong('Selected output directory:'), textOutput("dir.value")),
     
     tags$div(

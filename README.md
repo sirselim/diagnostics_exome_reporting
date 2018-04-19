@@ -27,6 +27,7 @@ Pipeline to annotate and filter variant called format (vcf) files and generate a
   - [ ] add more extracted features to the `vcfcompiler_diagnostics.sh` script (i.e. CADD score)
   - [ ] add user defined option for the 3rd tier gene list
     + [x] create a feature branch for this to be implemented (user-defined-tiers) 
+    + [X] update variable names of gene lists to be universal
     + [ ] add integration with a self contained and user curated gene list repository 
   - [ ] evaluate whether we need to continue to allow the user to define the 'home' dir
   - [ ] integrate docker branch (this is likely to address some/all above concerns)
