@@ -1,7 +1,7 @@
 #!/bin/bash
 #
 # Created: 2016/02/19
-# Last modified: 2018/04/19
+# Last modified: 2018/04/20
 # Author: Miles Benton
 #
 # """
@@ -38,7 +38,7 @@ zcat vcf/"$filename".vcf.gz | grep '##' | grep 'VEP=\|SnpSiftV\|file\|source=\|p
 
 ## Tier 0 Genes
 # tier 0 filtering
-echo "...filtering at tier 0 specfic enes..."
+echo "...filtering at tier 0 specfic genes..."
 ### modified tabix version
 # replace grep filtering with tabix for speed
 zcat Homo_sapiens.GRCh37.87.genes.bed.gz | grep -w -f "$TIER0LIST" | sort -k 1,1V -k2,2n -k3,3n > gene_lists/tier0_gene_regions.txt
@@ -119,7 +119,7 @@ fi
 #	
 cat "$TIER0LIST" "$TIER1LIST" "$TIER2LIST" | sort | uniq > gene_lists/filtered_list.txt
 # tier 3 filtering
-echo "...filtering at tier 3: All Other Genes..."
+echo "...filtering at tier 3 - all other genes..."
 # replace grep filtering with tabix for speed, take inverse here to get remaining genes/variants
 zcat Homo_sapiens.GRCh37.87.genes.bed.gz | grep -w -v -f gene_lists/filtered_list.txt | sort -k 1,1V -k2,2n -k3,3n > gene_lists/remaining_variant_regions.txt
 "$TABIX" -R gene_lists/remaining_variant_regions.txt vcf/"$filename".vcf.gz > results/Tier_3/"$filename"_Tier_3_results.vcf
