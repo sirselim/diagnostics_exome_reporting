@@ -107,7 +107,8 @@ git clone git@github.com:sirselim/diagnostics_exome_reporting.git --branch user-
 echo "...transfering required files..."
 # define the label and .vcf.gz string to narrow search
 IONLABEL=$(paste -d'.' <(echo "$LABELID") <(echo 'vcf.gz'))
-echo "$IONLABEL"
+#echo "$IONLABEL"
+echo ""
 # 
 if ls -d ./raw_wes_files/* | grep "$sampleID" | grep -q "$IONLABEL"; then
     VCFFILE=$(ls -d ./raw_wes_files/* | grep "$sampleID" | grep "$IONLABEL")
@@ -159,13 +160,13 @@ echo "...moving user uploaded gene lists to output directory..."
 mv ./gene_lists/* "$sampleDIR"/gene_lists/
 # remove empty gene_lists dir
 echo "...removing empty gene_list directory..."
+echo ""
 rm -R ./gene_lists/
 #### TESTING
 # message
 echo "...setup complete..."
 cd "$sampleDIR"
 echo "...moving to VCF annotation..."
-echo ""
 echo ""
 ##/END [1]
 
@@ -179,6 +180,7 @@ export LC_ALL=C
 ##
 # source configuration file to set software and database paths
 # users should edit configuration.sh accordingly
+echo "########################## Configuration Options ###########################"
 echo "...reading in configuration options..."
 . ./configuration.sh
 echo ""

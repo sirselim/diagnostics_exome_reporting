@@ -30,13 +30,15 @@ function(input, output) {
                                                      paste0('gene_lists/', input$tier2List$name),
                                                      input$directory), file = paste0(input$HomeDirectory, "pipeline_input.txt"), 
                                                col.names = FALSE, row.names = FALSE, quote = FALSE)
-      ### TESTNG /data/PostDoc/diagnostic_pipeline/
+      # take user uploaded lists and put them into gene_lilsts dir (created below) 
       dir.create(paste0(input$HomeDirectory, 'gene_lists/'))
       file.copy(input$tier0List$datapath, paste0(input$HomeDirectory, 'gene_lists/', input$tier0List$name))
       file.copy(input$tier1List$datapath, paste0(input$HomeDirectory, 'gene_lists/', input$tier1List$name))
       file.copy(input$tier2List$datapath, paste0(input$HomeDirectory, 'gene_lists/', input$tier2List$name))
-      ###
+      # these genes will be copied to the output dir and this gene_list dir will be removed (in main bash script)
+      # start main pipeline bash script
       system(paste0(input$HomeDirectory, "./WESdiag_pipeline_dev.sh")) 
+      # look at adding email notification upon completion here
       })
     
   }
