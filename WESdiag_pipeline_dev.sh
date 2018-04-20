@@ -54,26 +54,7 @@ echo "Tier0 gene list: $TIER0LIST "
 echo "Tier1 gene list: $TIER1LIST "
 echo "Tier2 gene list: $TIER2LIST "
 echo "Directory for analysis: $sampleDIR "
-## removed user check (relied on xmessage thus X11 env)
-# ask for confirmation before proceedingChoo2geez=ai0g
-# can remove this eventually but retaining as sanity check for now
-# echo ""
-# # added a graphical prompt for user check
-# xmessage -center -buttons Yes,No -default No -center "Are these details correct and do you wish to proceed?"
-# ans="$?"
-# if [[ "$ans" == 101 ]]; then
-#        :;
-# else
-#     exit;
-# fi
-# commandline user check 
-#echo "## Are these correct and do you wish to proceed?"
-#select yn in "Yes" "No"; do
-#    case $yn in
-#        Yes ) echo "...continuing with WES pipeline..."; break;;
-#        No ) echo "...exiting WES pipline script..."; exit;;
-#    esac
-#done
+# user check now in Shiny GUI
 echo ""
 ##/END define variables 
 
@@ -97,19 +78,18 @@ else
 fi
 # extract/clone pipeline into created directory
 echo "...cloning and extracting latest pipeline scripts and directories from GitHub..."
-# tar -C "$sampleDIR" -xzf GRC_wes_pipeline_files.tar.gz
-# replaced tar.gz with private GitHub repository for more detailed versioning 
+#### testing the feature branch
 # git clone git@github.com:sirselim/diagnostics_exome_reporting.git "$sampleDIR"
-## testing the feature branch
 git clone git@github.com:sirselim/diagnostics_exome_reporting.git --branch user-defined-tiers --single-branch "$sampleDIR"
-##
+#### testing the feature branch
 # capture vcf and quality information files from 'raw' directory
 echo "...transfering required files..."
 # define the label and .vcf.gz string to narrow search
 IONLABEL=$(paste -d'.' <(echo "$LABELID") <(echo 'vcf.gz'))
 #echo "$IONLABEL"
 echo ""
-# 
+#
+#### currently hard-coded directory for raw data - './raw_wes_files/' 
 if ls -d ./raw_wes_files/* | grep "$sampleID" | grep -q "$IONLABEL"; then
     VCFFILE=$(ls -d ./raw_wes_files/* | grep "$sampleID" | grep "$IONLABEL")
     echo "...found vcf file: $VCFFILE..."
@@ -130,39 +110,19 @@ fi
 # if there are txt files for the same sample then we have a problem
 TXTfile=$(ls -d ./raw_wes_files/* | grep "$sampleID" | grep '.txt')
 echo "...found quality information file: $TXTfile..."
-## removed user check (relied on xmessage thus X11 env)
-# check once again that this is the correct sample and file
-# ask for confirmation before proceeding
-# ECHO ""
-# XMESSAGE -CENTER -BUTTONS YES,NO -DEFAULT NO -CENTER "IS THIS THE CORRECT FILE - $VCFFILE - AND DO YOU WISH TO PROCEED?"
-# ANS="$?"
-# IF [[ "$ANS" == 101 ]]; THEN
-#        ECHO "...CONTINUING WITH WES PIPELINE..."; :;
-# ELSE
-#    ECHO "...EXITING WES PIPLINE SCRIPT..."; RM -R "$SAMPLEDIR"; EXIT;
-# FI
-#echo "## Is this the correct file - $VCFFILE - and do you WISH to proceed?"
-#select yn in "Yes" "NO"; do
-#    case $yn in
-#        Yes ) echo "...continuing with WES pipeline..."; break;;
-#        No ) echo "...exiting WES pipline script..."; rm -R "$sampleDIR"; exit;;
-#    esac
-#done
 echo ""
 # copy these to correct location within sample directory
 # copy vcf file
 cp "$VCFFILE" "$sampleDIR"/vcf/
 # copy quality statistics file
 cp "$TXTfile" "$sampleDIR"/coverage_stats/
-#### TESTING
 # move uploaded gene lists to working dir
 echo "...moving user uploaded gene lists to output directory..."
 mv ./gene_lists/* "$sampleDIR"/gene_lists/
 # remove empty gene_lists dir
 echo "...removing empty gene_list directory..."
-echo ""
 rm -R ./gene_lists/
-#### TESTING
+echo ""
 # message
 echo "...setup complete..."
 cd "$sampleDIR"

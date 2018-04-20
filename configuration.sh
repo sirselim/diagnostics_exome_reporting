@@ -1,7 +1,7 @@
 #!/bin/bash
 
 ####
-## configuration file for diagnostic pipeline
+## configuration file for Diagnostics Annotation and Reporting Tool (DART) 
 ####
 
 # set number of threads to use
@@ -22,4 +22,5 @@ VEP_DATA="/data/all/VEPdata/"
 FASTA_REF="/data/all/VEPdata/homo_sapiens/89_GRCh37/Homo_sapiens.GRCh37.75.dna.primary_assembly.fa"
 DBNSFP="/data/all/dbNSFP/hg19/v2.9.3/dbNSFPv2.9.3_hg19_custom.txt.gz"
 
-# dir of your sequence data
+# dir of sequence and quality/coverage data
+RAWDATA="/home/grcnata/raw_wes_files/"

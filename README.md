@@ -1,7 +1,12 @@
-# diagnostics_exome_reporting
+## diagnostics_exome_reporting
 Pipeline to annotate and filter variant called format (vcf) files and generate a report document for clinical diagnostics. The variant annotation and filtering pipeline now uses a web server GUI implemented in R Shiny. 
 
-# Current to-do list and fixes/features pending
+## Possible names for software
+
+  - **DART** - **D**iagnostics **A**nnotation and **R**eporting **T**ool
+    + this means that the other Shiny app could be **DART-view** or **DART-viewer**
+
+## Current to-do list and fixes/features pending
 
   - [ ] look at moving this to-do list over to a roadmap in the wiki
   - [x] ~~GitHub repo requires ssh passphrase each use~~  
@@ -34,6 +39,8 @@ Pipeline to annotate and filter variant called format (vcf) files and generate a
     + [ ] use user uploaded gene lists (download into `gene_list` dir)
     + [ ] add integration with a self contained and user curated gene list repository 
   - [ ] look into adding a cancel/exit button to the Shiny App to kill run
+  - [ ] explore asking user for raw data dir in GUI or configuration file (currently hard-coded)
   - [ ] evaluate whether we need to continue to allow the user to define the 'home' dir
   - [ ] generate and send an email and/or text message upon run completion 
   - [ ] integrate docker branch (this is likely to address some/all above concerns)
+  - [ ] update DART-view (other shiny app) to point to the correct directory for viewing results
