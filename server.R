@@ -30,7 +30,14 @@ function(input, output) {
                                                      paste0('gene_lists/', input$tier2List$name),
                                                      input$directory), file = paste0(input$HomeDirectory, "pipeline_input.txt"), 
                                                col.names = FALSE, row.names = FALSE, quote = FALSE)
-      system(paste0(input$HomeDirectory, "./WESdiag_pipeline_dev.sh")) })
+      ### TESTNG /data/PostDoc/diagnostic_pipeline/
+      dir.create(paste0(input$HomeDirectory, 'gene_lists/'))
+      file.copy(input$tier0List$datapath, paste0(input$HomeDirectory, 'gene_lists/', input$tier0List$name))
+      file.copy(input$tier1List$datapath, paste0(input$HomeDirectory, 'gene_lists/', input$tier1List$name))
+      file.copy(input$tier2List$datapath, paste0(input$HomeDirectory, 'gene_lists/', input$tier2List$name))
+      ###
+      system(paste0(input$HomeDirectory, "./WESdiag_pipeline_dev.sh")) 
+      })
     
   }
 ##/END

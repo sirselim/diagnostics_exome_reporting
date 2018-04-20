@@ -153,6 +153,14 @@ echo ""
 cp "$VCFFILE" "$sampleDIR"/vcf/
 # copy quality statistics file
 cp "$TXTfile" "$sampleDIR"/coverage_stats/
+#### TESTING
+# move uploaded gene lists to working dir
+echo "...moving user uploaded gene lists to output directory..."
+mv ./gene_lists/* "$sampleDIR"/gene_lists/
+# remove empty gene_lists dir
+echo "...removing empty gene_list directory..."
+rm -R ./gene_lists/
+#### TESTING
 # message
 echo "...setup complete..."
 cd "$sampleDIR"

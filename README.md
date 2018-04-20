@@ -33,6 +33,7 @@ Pipeline to annotate and filter variant called format (vcf) files and generate a
     + [X] ~~update variable names of gene lists to be universal~~
     + [ ] use user uploaded gene lists (download into `gene_list` dir)
     + [ ] add integration with a self contained and user curated gene list repository 
+  - [ ] look into adding a cancel/exit button to the Shiny App to kill run
   - [ ] evaluate whether we need to continue to allow the user to define the 'home' dir
   - [ ] generate and send an email and/or text message upon run completion 
   - [ ] integrate docker branch (this is likely to address some/all above concerns)
