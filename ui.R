@@ -10,7 +10,7 @@ require(shinycssloaders)
 require(magrittr)
 # define ui and server
 pageWithSidebar(
-  headerPanel("Variant Annotation & Reporter Tool"),
+  headerPanel("VCF-DART (VCF Diagnostics Annotation and Reporting Tool)"),
   sidebarPanel(
     helpText("Enter details for annotation run and report generation."),
     

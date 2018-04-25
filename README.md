@@ -1,4 +1,4 @@
-## diagnostics_exome_reporting
+## VCF-DART (VCF Diagnostics Annotation and Reporting Tool)
 Pipeline to annotate and filter variant called format (vcf) files and generate a report document for clinical diagnostics. The variant annotation and filtering pipeline now uses a web server GUI implemented in R Shiny. 
 
 ## Possible names for software
