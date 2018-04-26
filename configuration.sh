@@ -10,8 +10,9 @@ THREADS="12"
 # set paths to software
 SNPEFF="/data/all/programs/snpeff/snpEff/snpEff.jar"
 SNPSIFT="/data/all/programs/snpeff/snpEff/SnpSift.jar"
-VEP="/data/all/programs/VEP/vep-87-github-release/vep.pl"
-#VEP="/data/all/programs/VEP/ensembl-vep/vep"
+#VEP="/data/all/programs/VEP/vep-87-github-release/vep.pl"
+# the below links to the latest git build of VEP
+VEP="/data/all/programs/VEP/ensembl-vep/vep"
 BGZIP="/usr/local/bin/bgzip"
 TABIX="/usr/local/bin/tabix"
 BCFTOOLS="/usr/bin/bcftools"

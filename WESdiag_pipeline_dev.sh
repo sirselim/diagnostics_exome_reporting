@@ -174,7 +174,7 @@ echo "##########################################################################
 echo "############################## VEP annotation ##############################"
 echo "############################################################################"
 echo "...annotating with VEP..."
-perl "$VEP" --assembly GRCh37 --fasta "$FASTA_REF" --cache --merged -i vcf/"$filename"_dbSNP.vcf --offline --stats_text --everything -o vcf/"$filename"_dbSNP_VEP.vcf --vcf --dir "$VEP_DATA" --fork "$THREADS" --force_overwrite
+perl "$VEP" --assembly GRCh37 --fasta "$FASTA_REF" --cache --dir "$VEP_DATA" --merged -i vcf/"$filename"_dbSNP.vcf --offline --stats_text --everything -o vcf/"$filename"_dbSNP_VEP.vcf --vcf --fork "$THREADS" --force_overwrite
 ## SNPSift dbNSFP
 echo ""
 echo "############################################################################"
