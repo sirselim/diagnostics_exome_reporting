@@ -22,7 +22,7 @@ VCFSORT="/usr/bin/vcf-sort"
 DBSNP_DATA="/data/all/ncbi/hg19/All_20170710.vcf.gz"
 VEP_DATA="/data/all/VEPdata/"
 #FASTA_REF="/data/all/VEPdata/homo_sapiens/89_GRCh37/Homo_sapiens.GRCh37.75.dna.primary_assembly.fa"
-FASTA_REF="/data/all/ref_genomes/GRCh37/Homo_sapiens.GRCh37.75.dna.primary_assembly.fa"
+FASTA_REF="/home/grcnata/fasta/Homo_sapiens.GRCh37.75.dna.primary_assembly.fa"
 DBNSFP="/data/all/dbNSFP/hg19/v2.9.3/dbNSFPv2.9.3_hg19_custom.txt.gz"
 
 # dir of sequence and quality/coverage data
