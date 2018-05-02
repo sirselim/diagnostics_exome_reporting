@@ -286,6 +286,9 @@ mv "$LOGFILE" .
 LOGFILE=$(ls *.log)
 LOGOUT=$(paste -d'_' <(echo "$sampleID") <(echo "$LOGFILE"))
 mv "$LOGFILE" "$LOGOUT"
+# also move the pipeline_input.txt into the directory structure
+mv ../pipeline_input.txt .
+# state time finished and taken
 echo "...Pipeline run of $sampleID finished on $DATE at $RUNTIME..."
 echo "...Total run time was $TOTAL_TIME seconds..."
 echo ""
