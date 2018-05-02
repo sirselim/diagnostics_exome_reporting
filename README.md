@@ -33,14 +33,14 @@ Pipeline to annotate and filter variant called format (vcf) files and generate a
     + [x] ~~test working when deployed remotely~~
   - [x] ~~added code to set working dir to main script location~~
   - [ ] add more extracted features to the `vcfcompiler_diagnostics.sh` script (i.e. CADD score)
-  - [ ] add user defined option for the 3rd tier gene list
+  - [x] add user defined option for the 3rd tier gene list
     + [x] ~~create a feature branch for this to be implemented (user-defined-tiers)~~
-    + [X] ~~update variable names of gene lists to be universal~~
-    + [ ] use user uploaded gene lists (download into `gene_list` dir)
-    + [ ] add integration with a self contained and user curated gene list repository 
+    + [x] ~~update variable names of gene lists to be universal~~
+    + [x] ~~use user uploaded gene lists (download into `gene_list` dir)~~
+    + [x] ~~add integration with a self contained and user curated gene list repository~~ 
   - [ ] look into adding a cancel/exit button to the Shiny App to kill run
   - [ ] explore asking user for raw data dir in GUI or configuration file (currently hard-coded)
   - [ ] evaluate whether we need to continue to allow the user to define the 'home' dir
   - [ ] generate and send an email and/or text message upon run completion 
   - [ ] integrate docker branch (this is likely to address some/all above concerns)
-  - [ ] update DART-view (other shiny app) to point to the correct directory for viewing results
+  - [x] update DART-view (other shiny app) to point to the correct directory for viewing results
