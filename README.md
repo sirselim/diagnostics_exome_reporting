@@ -11,7 +11,7 @@ Pipeline to annotate and filter variant called format (vcf) files and generate a
 The following programs need to be available/installed for correct operation:
   - [VEP](https://www.ensembl.org/vep)
   - [snpEFF](snpeff.sourceforge.net/) (for SNPSift dbNSFP annotation)
-  - [tabix]()www.htslib.org/doc/tabix.html (compression and indexing)
+  - [tabix](www.htslib.org/doc/tabix.html) (compression and indexing)
   - [bedops](https://bedops.readthedocs.io/) (for vcf-sort)
   - [bcftools](https://samtools.github.io/bcftools/bcftools.html) 
   - [R](https://www.r-project.org/)
