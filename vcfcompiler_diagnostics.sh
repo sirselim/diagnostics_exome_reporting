@@ -61,8 +61,6 @@ header=$(paste <(echo "chromosome") \
                 <(echo "MutationTaster") \
                 <(echo "SIFT") \
                 <(echo "Polyphen2") \
-                # <(echo "CADD") \
-                # <(echo "MutationAssessor") \
                 --delimiters '\t')
 echo "$header" >> "$OUT_CSV_FILE"
 
@@ -131,8 +129,6 @@ dataset=$(paste <(echo "$chrom") \
                 <(echo "$MutationTaster") \
                 <(echo "$SIFT") \
                 <(echo "$Polyphen2") \
-                # <(echo "$CADD") \
-                # <(echo "$MutationAssessor") \
                     --delimiters '\t')
 echo "$dataset" >> "$OUT_CSV_FILE"
 ##/END
