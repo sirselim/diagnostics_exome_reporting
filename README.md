@@ -21,10 +21,13 @@ The following programs need to be available/installed for correct operation:
 
 VCF-DART currently requires the following packages (and their dependencies) to be installed for correct operation:
 ```R
-# required packages
+# CRAN
 install.packages('magrittr')
-require('magrittr')
+install.packages('shiny')
+install.packages('rmarkdown')
+install.packages('pander')
 ```
+*NOTE: for Shiny Server to be correctly installed you will require both `shiny` and `rmarkdow` packages to be installed.*
 
 ## Current to-do list and fixes/features pending
 
