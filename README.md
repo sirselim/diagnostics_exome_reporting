@@ -6,6 +6,15 @@ Pipeline to annotate and filter variant called format (vcf) files and generate a
   - **DART** - **D**iagnostics **A**nnotation and **R**eporting **T**ool
     + this means that the other Shiny app could be **DART-view** or **DART-viewer**
 
+## R Package Dependencies
+
+VCF-DART currently requires the following packages (and their dependencies) to be installed for correct operation:
+```R
+# required packages
+install.packages('magrittr')
+require('magrittr')
+```
+
 ## Current to-do list and fixes/features pending
 
   - [ ] look at moving this to-do list over to a roadmap in the wiki
