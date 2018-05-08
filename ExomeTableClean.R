@@ -51,8 +51,6 @@ exome_table_clean <- data.frame(location = paste(exome_table$chromosome, exome_t
                           AAchange = unlist(lapply(strsplit(exome_table$amino_acid_substitution, split = ';'), `[[`, 1)),
                           MutationTaster = exome_table$MutationTaster,
                           MutationAssessor = exome_table$MutationAssessor,
-                          # CADD = exome_table$CADD,
-                          # SIFT = exome_table$SIFT,
                           Polyphen2 = exome_table$Polyphen2,
                           coverage = paste0(exome_table$depth_coverage, ' ', exome_table$reference_allele, '(', exome_table$Ref_coverage, 
                                             ')', ' ', exome_table$alternate_allele, '(', exome_table$Alt_coverage, ')'),

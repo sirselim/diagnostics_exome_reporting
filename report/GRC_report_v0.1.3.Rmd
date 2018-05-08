@@ -222,7 +222,6 @@ if (nrow(tier0_mutations) != 0) {
 ```
 There are **`r nrow(tier0_mutations)`** variants that are amino acid changing and don't have an rs number.
 ```{r table_0.2, echo=FALSE, message=FALSE, warning=FALSE}
-#
 emphasize.cols(6) # italics for gene names
 if (nrow(tier0_mutations) != 0) {
   pander(tier0_mutations, caption = "Amino acid changing variant, no rs#")
