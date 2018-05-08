@@ -6,6 +6,17 @@ Pipeline to annotate and filter variant called format (vcf) files and generate a
   - **DART** - **D**iagnostics **A**nnotation and **R**eporting **T**ool
     + this means that the other Shiny app could be **DART-view** or **DART-viewer**
 
+## Software Dependencies
+
+The following programs need to be available/installed for correct operation:
+  - [VEP]()
+  - [snpEFF]() (for SNPSift dbNSFP annotation)
+  - [tabix]() (compression and indexing)
+  - [bedops]() (for vcf-sort)
+  - [bcftools]() 
+  - [R]()
+  - [Shiny Server]()
+
 ## R Package Dependencies
 
 VCF-DART currently requires the following packages (and their dependencies) to be installed for correct operation:
