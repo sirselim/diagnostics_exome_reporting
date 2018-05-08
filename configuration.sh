@@ -23,9 +23,9 @@ VEP_DATA="/data/all/VEPdata/"
 # when you build a new version of VEP you might need to manually delete the index file (permission issues)
 FASTA_REF="/home/grcnata/fasta/Homo_sapiens.GRCh37.75.dna.primary_assembly.fa"
 ## older dbNSFP version [hg19]
-# DBNSFP="/data/all/dbNSFP/hg19/v2.9.3/dbNSFPv2.9.3_hg19_custom.txt.gz"
+DBNSFP="/data/all/dbNSFP/hg19/v2.9.3/dbNSFPv2.9.3_hg19_custom.txt.gz"
 ## newest dbNSFP version [hg19]
-DBNSFP="/data/all/dbNSFP/hg19/v3.5a/dbNSFPv3.5a.hg19.txt.gz"
+# DBNSFP="/data/all/dbNSFP/hg19/v3.5a/dbNSFPv3.5a.hg19.txt.gz"
 ## newest dbNSFP version [hg38]
 # DBNSFP="/data/all/dbNSFP/hg38/v3.5a/dbNSFPv3.5a.txt.gz"
 
