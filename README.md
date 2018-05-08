@@ -32,7 +32,9 @@ Pipeline to annotate and filter variant called format (vcf) files and generate a
     + [x] ~~add home directory variable to set location for data and scripts~~
     + [x] ~~test working when deployed remotely~~
   - [x] ~~added code to set working dir to main script location~~
+  - [ ] explore having options for which databases to annotate against, i.e. not running VEP `--everything` could cut run time by 30+ mins
   - [ ] add more extracted features to the `vcfcompiler_diagnostics.sh` script (i.e. CADD score)
+    + [ ] make CADD score available (add extraction routine in `vcfcompiler_diagnostics.sh`)
   - [x] ~~add user defined option for the 3rd tier gene list~~
     + [x] ~~create a feature branch for this to be implemented (user-defined-tiers)~~
     + [x] ~~update variable names of gene lists to be universal~~
@@ -42,5 +44,6 @@ Pipeline to annotate and filter variant called format (vcf) files and generate a
   - [ ] explore asking user for raw data dir in GUI or configuration file (currently hard-coded)
   - [ ] evaluate whether we need to continue to allow the user to define the 'home' dir
   - [ ] generate and send an email and/or text message upon run completion 
+  - [ ] test whether bgzipping and creating tabix index for the vcf file improves VEP performance
   - [ ] integrate docker branch (this is likely to address some/all above concerns)
   - [x] ~~update DART-view (other shiny app) to point to the correct directory for viewing results~~

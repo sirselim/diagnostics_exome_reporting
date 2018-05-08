@@ -1,7 +1,7 @@
 #!/bin/bash
 #
 # Created: 2016/04/04
-# Last modified: 2018/04/19
+# Last modified: 2018/05/08
 # Author: Miles Benton
 #
 # """
@@ -64,6 +64,7 @@ echo "...You are using $GENOME_BUILD..."
 
 # extract all variants considered 'damaging' under Mutation Assessor and Mutation Taster
 zcat "$INPUTFILE" | grep 'MutationAssessor_pred=H' | grep 'MutationTaster_pred=D\|MutationTaster_pred=A' | grep -P ';DP=[0-9]{1,}' > tmp_variants.txt
+# this is currently both, could look at moving to an OR situation (so it's damaging in at least one, doesn't have to be both)
 
 VARNO=$(wc -l tmp_variants.txt | awk '{print $1}')
 
