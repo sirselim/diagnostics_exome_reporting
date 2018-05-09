@@ -39,7 +39,9 @@ zcat vcf/"$filename".vcf.gz | grep '##' | grep 'VEP=\|SnpSiftV\|file\|source=\|p
 ## Tier 0 Genes - filtering
 echo "...filtering at tier 0 specfic genes..."
 # replace grep filtering with tabix for speed
-zcat Homo_sapiens.GRCh37.87.genes.bed.gz | grep -w -f "$TIER0LIST" | sort -k 1,1V -k2,2n -k3,3n > gene_lists/tier0_gene_regions.txt
+# zcat Homo_sapiens.GRCh37.87.genes.bed.gz | grep -w -f "$TIER0LIST" | sort -k 1,1V -k2,2n -k3,3n > gene_lists/tier0_gene_regions.txt
+# added an awk filter to convert windows encoding if present 
+zcat Homo_sapiens.GRCh37.87.genes.bed.gz | grep -w -f <(awk '{ sub("\r$", ""); print }' "$TIER0LIST") | sort -k 1,1V -k2,2n -k3,3n > gene_lists/tier0_gene_regions.txt
 "$TABIX" -R gene_lists/tier0_gene_regions.txt vcf/"$filename".vcf.gz > results/Tier_0/"$filename"_Tier_0_results.vcf
 # add header back for processing
 cat vcf/vcf_header.txt results/Tier_0/"$filename"_Tier_0_results.vcf > results/Tier_0/"$filename"_Tier_0_results_"$DATE".vcf
@@ -56,7 +58,9 @@ rm gene_lists/tier0_gene_regions.txt
 ## Tier 1 Genes - filtering 
 echo "...filtering at tier 1 specific genes..."
 # replace grep filtering with tabix for speed
-zcat Homo_sapiens.GRCh37.87.genes.bed.gz | grep -w -f "$TIER1LIST" | sort -k 1,1V -k2,2n -k3,3n > gene_lists/tier1_gene_regions.txt
+# zcat Homo_sapiens.GRCh37.87.genes.bed.gz | grep -w -f "$TIER1LIST" | sort -k 1,1V -k2,2n -k3,3n > gene_lists/tier1_gene_regions.txt
+# added an awk filter to convert windows encoding if present 
+zcat Homo_sapiens.GRCh37.87.genes.bed.gz | grep -w -f <(awk '{ sub("\r$", ""); print }' "$TIER1LIST") | sort -k 1,1V -k2,2n -k3,3n > gene_lists/tier1_gene_regions.txt
 "$TABIX" -R gene_lists/tier1_gene_regions.txt vcf/"$filename".vcf.gz > results/Tier_1/"$filename"_Tier_1_results.vcf
 # add header back for processing
 cat vcf/vcf_header.txt results/Tier_1/"$filename"_Tier_1_results.vcf > results/Tier_1/"$filename"_Tier_1_results_"$DATE".vcf
@@ -73,7 +77,9 @@ rm gene_lists/tier1_gene_regions.txt
 ## Tier 2 Genes - filtering 
 echo "...filtering at tier 2 specific genes..."
 # replace grep filtering with tabix for speed
-zcat Homo_sapiens.GRCh37.87.genes.bed.gz | grep -w -f "$TIER2LIST" | sort -k 1,1V -k2,2n -k3,3n > gene_lists/tier2_gene_regions.txt
+# zcat Homo_sapiens.GRCh37.87.genes.bed.gz | grep -w -f "$TIER2LIST" | sort -k 1,1V -k2,2n -k3,3n > gene_lists/tier2_gene_regions.txt
+# added an awk filter to convert windows encoding if present 
+zcat Homo_sapiens.GRCh37.87.genes.bed.gz | grep -w -f <(awk '{ sub("\r$", ""); print }' "$TIER2LIST") | sort -k 1,1V -k2,2n -k3,3n > gene_lists/tier2_gene_regions.txt
 "$TABIX" -R gene_lists/tier2_gene_regions.txt vcf/"$filename".vcf.gz > results/Tier_2/"$filename"_Tier_2_results.vcf
 # add header back for processing
 cat vcf/vcf_header.txt results/Tier_2/"$filename"_Tier_2_results.vcf > results/Tier_2/"$filename"_Tier_2_results_"$DATE".vcf
