@@ -20,7 +20,7 @@ THREADS="6"
 ## wagyu
 SNPEFF="/data2/programs/snpeff/snpEff.jar"
 SNPSIFT="/data2/programs/snpeff/SnpSift.jar"
-VEP="/data2/programs/ensembl-vepvep"
+VEP="/data2/programs/ensembl-vep/vep"
 BGZIP="/usr/bin/bgzip"
 TABIX="/usr/bin/tabix"
 BCFTOOLS="/usr/bin/bcftools"
