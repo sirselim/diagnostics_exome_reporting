@@ -71,3 +71,20 @@ install.packages('pander')
   - [ ] test whether bgzipping and creating tabix index for the vcf file improves VEP performance
   - [ ] integrate docker branch (this is likely to address some/all above concerns)
   - [x] ~~update DART-view (other shiny app) to point to the correct directory for viewing results~~
+
+## License
+
+    Copyright (C) 2018  Miles Benton
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>.
