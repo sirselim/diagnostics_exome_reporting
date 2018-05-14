@@ -34,20 +34,12 @@ install.packages('pander')
 
   - [ ] look at moving this to-do list over to a roadmap in the wiki
   - [x] ~~GitHub repo requires ssh passphrase each use~~  
+  - [x] ~~add a Shiny GUI to the front end~~  
+  - [x] ~~update DART-view (other shiny app) to point to the correct directory for viewing results~~
   - [x] ~~issue with grep using gene lists (files) and vcf.gz~~  
     + [x] ~~look into using tabix (MUCH faster)~~  
     + [x] ~~extract list of genes from a bed file (with position info), i.e. `grep -w -f 'gene_list.txt' UCSC_gene_positions_hg19.bed > gene_regions_hg19.txt`~~  
     + [x] ~~use: `tabix -R gene_regions.txt variant.vcf.gz`~~  
-  - [x] ~~add a Shiny GUI to the front end~~  
-  - [x] ~~create a configuration file to allow users to set paths to software and databases (temp)~~
-  - [x] ~~remove all hard-coded paths (software, databases and directories)~~
-    + [x] ~~remove from the main bash script (`WESdiag_pipeline_dev.sh`)~~
-    + [x] ~~remove from `wes_vcffiltering.sh`~~
-    + [x] ~~remove from `assess_variants.sh`~~
-    + [x] ~~remove from `vcfcompiler_diagnostics.sh`~~
-  - [ ] implement selection of genome build (currently only hg19 is working)
-    + [ ] this is a big feature as the current databases aren't all built for hg38
-    + [ ] create a separate feature branch to develop this  
   - [x] ~~remove the xmessage checks (relies on having X11 environment installed, not ideal)~~
     + [x] ~~decide if we need to have user checks at these two locations~~
   - [x] ~~ensure the log files are being moved back into the correct location~~
@@ -56,21 +48,40 @@ install.packages('pander')
     + [x] ~~add home directory variable to set location for data and scripts~~
     + [x] ~~test working when deployed remotely~~
   - [x] ~~added code to set working dir to main script location~~
-  - [ ] explore having options for which databases to annotate against, i.e. not running VEP `--everything` could cut run time by 30+ mins
-  - [ ] add more extracted features to the `vcfcompiler_diagnostics.sh` script (i.e. CADD score)
-    + [ ] make CADD score available (add extraction routine in `vcfcompiler_diagnostics.sh`)
+  - [x] ~~create a configuration file to allow users to set paths to software and databases (temp)~~
+  - [x] ~~remove all hard-coded paths (software, databases and directories)~~
+    + [x] ~~remove from the main bash script (`WESdiag_pipeline_dev.sh`)~~
+    + [x] ~~remove from `wes_vcffiltering.sh`~~
+    + [x] ~~remove from `assess_variants.sh`~~
+    + [x] ~~remove from `vcfcompiler_diagnostics.sh`~~
   - [x] ~~add user defined option for the 3rd tier gene list~~
     + [x] ~~create a feature branch for this to be implemented (user-defined-tiers)~~
     + [x] ~~update variable names of gene lists to be universal~~
     + [x] ~~use user uploaded gene lists (download into `gene_list` dir)~~
     + [x] ~~add integration with a self contained and user curated gene list repository~~ 
+  - [ ] explore having options for which databases to annotate against, i.e. not running VEP `--everything` could cut run time by 30+ mins
+    + [x] reducing the number of threads to 6 and removing the `--merged` VEP option reduce run times to 10-15 mins for vcf files ~30-50K variants in size
+  - [ ] implement selection of genome build (currently only hg19 is working)
+    + [ ] this is a big feature as the current databases aren't all built for hg38
+    + [ ] create a separate feature branch to develop this  
+  - [ ] add more extracted features to the `vcfcompiler_diagnostics.sh` script (i.e. CADD score)
+    + [ ] make CADD score available (add extraction routine in `vcfcompiler_diagnostics.sh`)
   - [ ] look into adding a cancel/exit button to the Shiny App to kill run
   - [ ] explore asking user for raw data dir in GUI or configuration file (currently hard-coded)
   - [ ] evaluate whether we need to continue to allow the user to define the 'home' dir
   - [ ] generate and send an email and/or text message upon run completion 
   - [ ] test whether bgzipping and creating tabix index for the vcf file improves VEP performance
+  - [ ] look into developing an option for "off-line mode"
+    + [ ] design a check for internet connection
+    + [ ] would need a local copy of the repository available
+  - [ ] explore the presence of duplicate variants in the final tier (tier 3)
+  - [ ] check for and ignore `.tbi` files in the data directory
+  - [ ] explore adding a check for label in the coverage text file as well
+  - [ ] add time taken after each stage of the pipeline (in main bash script)
+  - [ ] implement multiple row selection and copy to clipboard
+  - [ ] check for existing `gene_list` dir and delete if present
+  - [ ] add a check for input variables and warn/error display that this is the case if missing
   - [ ] integrate docker branch (this is likely to address some/all above concerns)
-  - [x] ~~update DART-view (other shiny app) to point to the correct directory for viewing results~~
 
 ## License
 
