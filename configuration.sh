@@ -5,7 +5,7 @@
 ####
 
 # set number of threads to use
-THREADS="6"
+THREADS="4"
 
 ####
 # set paths to software
