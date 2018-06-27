@@ -6,7 +6,7 @@
 
 # set number of threads to use
 THREADS="4"
-THREADS_dbNSFP="3"
+THREADS_dbNSFP="4"
 
 ####
 # set paths to software
