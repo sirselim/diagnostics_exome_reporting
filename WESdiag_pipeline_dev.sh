@@ -187,7 +187,7 @@ java -jar "$SNPSIFT" split vcf/"$filename"_dbSNP_VEP.vcf
 # create list of chr vcf files
 find vcf/"$filename"_dbSNP_VEP.chr* -maxdepth 1 -type f -printf '%f\n' > chr_list.txt
 # run in parallel
-cat chr_list.txt | parallel -j "$THREADS" 'java -jar '$SNPSIFT' dbnsfp -v -db '$DBNSFP' vcf/{} > vcf/test_{}'
+cat chr_list.txt | parallel -j "$THREADS_dbNSFP" 'java -jar '$SNPSIFT' dbnsfp -v -db '$DBNSFP' vcf/{} > vcf/test_{}'
 # join them back together
 java -jar "$SNPSIFT" split -j vcf/test_* > vcf/"$filename"_dbSNP_VEP_dbNSFP.vcf
 # clean up
