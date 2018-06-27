@@ -1,4 +1,5 @@
-## VCF-DART (VCF Diagnostics Annotation and Reporting Tool)
+# VCF-DART (VCF Diagnostics Annotation and Reporting Tool)
+
 Pipeline to annotate and filter variant called format (vcf) files and generate a report document for clinical diagnostics. The variant annotation and filtering pipeline now uses a web server GUI implemented in R Shiny. 
 
 ## Possible names for software
@@ -9,6 +10,7 @@ Pipeline to annotate and filter variant called format (vcf) files and generate a
 ## Software Dependencies
 
 The following programs need to be available/installed for correct operation:
+
   - [VEP](https://www.ensembl.org/vep)
   - [snpEFF](snpeff.sourceforge.net/) (for SNPSift dbNSFP annotation)
   - [tabix](www.htslib.org/doc/tabix.html) (compression and indexing)
@@ -21,6 +23,7 @@ The following programs need to be available/installed for correct operation:
 ## R Package Dependencies
 
 VCF-DART currently requires the following packages (and their dependencies) to be installed for correct operation:
+
 ```R
 # CRAN
 install.packages('magrittr')
@@ -28,11 +31,15 @@ install.packages('shiny')
 install.packages('rmarkdown')
 install.packages('pander')
 ```
+
 *NOTE: for Shiny Server to be correctly installed you will require both `shiny` and `rmarkdow` packages to be installed.*
 
 ## Current to-do list and fixes/features pending
 
   - [ ] look at moving this to-do list over to a roadmap in the wiki
+  - [ ] output docx and html version of the report, the html version can be viewed in VCF-DART Viewer (new tab)
+  - [ ] option to run without coverage text file (more a research purpose)
+  - [ ] look at integrating VCF-DART and VCF-DART Viewer into a shinydashboard (and within a docker container)
   - [x] ~~GitHub repo requires ssh passphrase each use~~  
   - [x] ~~add a Shiny GUI to the front end~~  
   - [x] ~~update DART-view (other shiny app) to point to the correct directory for viewing results~~
