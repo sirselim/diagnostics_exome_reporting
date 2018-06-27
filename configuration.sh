@@ -27,9 +27,9 @@ THREADS="6"
 # VCFSORT="/usr/bin/vcf-sort"
 ####
 ## wagyu
-SNPEFF="/home/install/snpEFF/snpEff.jar"
-SNPSIFT="/home/install/snpEFF/SnpSift.jar"
-VEP="/home/install/ensembl-vep/vep"
+SNPEFF="/home/miles/install/snpEff/snpEff.jar"
+SNPSIFT="/home/miles/install/snpEff/SnpSift.jar"
+VEP="/home/miles/install/ensembl-vep/vep"
 BGZIP="/usr/bin/bgzip"
 TABIX="/usr/bin/tabix"
 BCFTOOLS="/usr/bin/bcftools"
