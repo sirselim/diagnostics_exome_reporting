@@ -1,7 +1,7 @@
 #!/bin/bash
 #
 # Created: 2018/04/11
-# Last modified: 2018/06/29
+# Last modified: 2018/05/08
 # Author: Miles Benton
 #
 # """
@@ -19,34 +19,6 @@ cd "$(dirname "$0")"
 exec > >(tee -i WES_pipeline_run.log)
 exec 2>&1
 Everything below will go to the file 'WES_pipeline_run.log':
-##
-
-####
-## configuration options for VCF Diagnostics Annotation and Reporting Tool (VCF-DART) 
-## these values need to be modified by the user to reflect their particular setup
-####
-echo "########################## Configuration Options ###########################"
-echo "...reading in configuration options..."
-# set number of threads to use
-THREADS="4"
-THREADS_dbNSFP="3"
-# paths to software
-SNPEFF="/home/miles/install/snpEff/snpEff.jar"
-SNPSIFT="/home/miles/install/snpEff/SnpSift.jar"
-VEP="/home/miles/install/ensembl-vep/vep"
-BGZIP="/usr/bin/bgzip"
-TABIX="/usr/bin/tabix"
-BCFTOOLS="/usr/bin/bcftools"
-VCFSORT="/usr/bin/vcf-sort"
-# set paths to database directories
-DBSNP_DATA="/data/dbSNP/hg19/All_20170710.vcf.gz"
-VEP_DATA="/data/VEPdata/"
-FASTA_REF="/data/VEPdata/homo_sapiens/92_GRCh37/Homo_sapiens.GRCh37.75.dna.primary_assembly.fa.gz"
-DBNSFP="/data/dbNSFP/hg19/v2.9.3/dbNSFPv2.9.3_hg19_custom.txt.gz"
-# dir of sequence and quality/coverage data
-RAWDATA="/data2/vcfdart_data/*"
-####
-echo ""
 ##
 
 ## [0] required user input
@@ -118,8 +90,8 @@ IONLABEL=$(paste -d'.' <(echo "$LABELID") <(echo 'vcf.gz'))
 echo ""
 #
 #### currently hard-coded directory for raw data - './raw_wes_files/' 
-if ls -d "$RAWDATA" | grep "$sampleID" | grep -q "$IONLABEL"; then
-    VCFFILE=$(ls -d "$RAWDATA" | grep "$sampleID" | grep "$IONLABEL")
+if ls -d ./raw_wes_files/* | grep "$sampleID" | grep -q "$IONLABEL"; then
+    VCFFILE=$(ls -d ./raw_wes_files/* | grep "$sampleID" | grep "$IONLABEL")
     echo "...found vcf file: $VCFFILE..."
 else
     echo "...no match for vcf.gz file, please check that the sampleID and IonExpress Label are correct and match..."
@@ -136,7 +108,7 @@ fi
 # find the coverage file
 # there is an issue of the quality files not having IonExpress Label informaiton
 # if there are txt files for the same sample then we have a problem
-TXTfile=$(ls -d "$RAWDATA" | grep "$sampleID" | grep '.txt')
+TXTfile=$(ls -d ./raw_wes_files/* | grep "$sampleID" | grep '.txt')
 echo "...found quality information file: $TXTfile..."
 echo ""
 # copy these to correct location within sample directory
@@ -165,6 +137,13 @@ echo ""
 # """
 # set perl locale
 export LC_ALL=C
+##
+# source configuration file to set software and database paths
+# users should edit configuration.sh accordingly
+echo "########################## Configuration Options ###########################"
+echo "...reading in configuration options..."
+. ./configuration.sh
+echo ""
 ##
 echo "############################################################################"
 echo "###################### Performing VCF file annotation ######################"

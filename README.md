@@ -40,6 +40,8 @@ install.packages('pander')
   - [ ] output docx and html version of the report, the html version can be viewed in VCF-DART Viewer (new tab)
   - [ ] option to run without coverage text file (more a research purpose)
   - [ ] look at integrating VCF-DART and VCF-DART Viewer into a shinydashboard (and within a docker container)
+  - [x] ~~removed the need for an external configuration file~~
+    - [x] ~~config options are now at the start of the script (user defined)~~
   - [x] ~~GitHub repo requires ssh passphrase each use~~  
   - [x] ~~add a Shiny GUI to the front end~~  
   - [x] ~~update DART-view (other shiny app) to point to the correct directory for viewing results~~
