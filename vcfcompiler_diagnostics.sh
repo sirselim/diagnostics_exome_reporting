@@ -73,12 +73,27 @@ alt=$(sed 1d "$INPUTFILE" | cut -f 5)
 qual=$(sed 1d "$INPUTFILE" | cut -f 6)
 # depth of coverage information 
 DP_coverage=$(sed '1d; s/^.*;DP=//' "$INPUTFILE" | tr ";" " " | awk '{print $1}')
-REF_coverage=$(sed '1d; s/^.*;RO=//' "$INPUTFILE" | tr ";" " " | awk '{print $1}')
-ALT_coverage=$(sed '1d; s/^.*;AO=//' "$INPUTFILE" | tr ";" " " | awk '{print $1}')
-ForRef_coverage=$(sed '1d; s/^.*;SRF=//' "$INPUTFILE" | tr ";" " " | awk '{print $1}')
-RevRef_coverage=$(sed '1d; s/^.*;SRR=//' "$INPUTFILE" | tr ";" " " | awk '{print $1}')
-ForAlt_coverage=$(sed '1d; s/^.*;SAF=//' "$INPUTFILE" | tr ";" " " | awk '{print $1}')
-RevAlt_coverage=$(sed '1d; s/^.*;SAR=//' "$INPUTFILE" | tr ";" " " | awk '{print $1}')
+# need to account for allele depth output from various callers (i.e. samtools mpile up vs GATK)
+# testing if statement
+if grep -qP '\tGT:AD:' "$INPUTFILE"; then
+    # filter AD from GATK format vcf
+    echo "identified GATK style vcf format"
+    REF_coverage=$(sed '1d; s/^.*:AD://' "$INPUTFILE" | sed 's/^.*\t[0-4]\/[0-4]://g' | tr ':' ' ' | awk '{print $1}' | tr ',' ' ' | awk '{print $1}')
+    ALT_coverage=$(sed '1d; s/^.*:AD://' "$INPUTFILE" | sed 's/^.*\t[0-4]\/[0-4]://g' | tr ':' ' ' | awk '{print $1}' | tr ',' ' ' | awk '{print $2}')
+    ForRef_coverage=$(sed '1d; s/^.*;SRF=//' "$INPUTFILE" | tr ";" " " | awk '{print $1}')
+    RevRef_coverage=$(sed '1d; s/^.*;SRR=//' "$INPUTFILE" | tr ";" " " | awk '{print $1}')
+    ForAlt_coverage=$(sed '1d; s/^.*;SAF=//' "$INPUTFILE" | tr ";" " " | awk '{print $1}')
+    RevAlt_coverage=$(sed '1d; s/^.*;SAR=//' "$INPUTFILE" | tr ";" " " | awk '{print $1}')
+else
+    # perform alt filtering
+    echo "identified samtools mpileup style vcf format"
+    REF_coverage=$(sed '1d; s/^.*;RO=//' "$INPUTFILE" | tr ";" " " | awk '{print $1}')
+    ALT_coverage=$(sed '1d; s/^.*;AO=//' "$INPUTFILE" | tr ";" " " | awk '{print $1}')
+    ForRef_coverage=$(sed '1d; s/^.*;SRF=//' "$INPUTFILE" | tr ";" " " | awk '{print $1}')
+    RevRef_coverage=$(sed '1d; s/^.*;SRR=//' "$INPUTFILE" | tr ";" " " | awk '{print $1}')
+    ForAlt_coverage=$(sed '1d; s/^.*;SAF=//' "$INPUTFILE" | tr ";" " " | awk '{print $1}')
+    RevAlt_coverage=$(sed '1d; s/^.*;SAR=//' "$INPUTFILE" | tr ";" " " | awk '{print $1}')
+fi
 #
 GENO=$(grep -oP '[0-3]/[0-3]:' "$INPUTFILE" | sed -e 's/://g')    # genotype, will have to convert to letters in R
 CAF1=$(sed '1d; s/^.*;CAF=//' "$INPUTFILE" | tr ";" " " | awk '{print $1}' | sed -e 's/chr.*/./g' | tr "," " " | awk '{print $1}') 
