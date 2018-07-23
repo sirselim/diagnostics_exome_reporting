@@ -92,5 +92,9 @@ for (i in c(1:nrow(exome_table_clean))) {
 exome_table_clean$coding <- coding_new
 ##
 
+# issue with duplicated rows
+deduped_exome_table_clean <- unique(exome_table_clean)
+#
+
 # write clean table out to results dir
-write.csv(exome_table_clean, outfile, row.names = F)
+write.csv(deduped_exome_table_clean, outfile, row.names = F)
