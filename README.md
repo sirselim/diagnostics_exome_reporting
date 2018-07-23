@@ -79,13 +79,13 @@ install.packages('pander')
   - [ ] explore asking user for raw data dir in GUI or configuration file (currently hard-coded)
   - [ ] evaluate whether we need to continue to allow the user to define the 'home' dir
   - [ ] generate and send an email and/or text message upon run completion 
-  - [ ] test whether bgzipping and creating tabix index for the vcf file improves VEP performance
+  - [x] ~~test whether bgzipping and creating tabix index for the vcf file improves VEP performance~~
   - [ ] look into developing an option for "off-line mode"
     + [ ] design a check for internet connection
     + [ ] would need a local copy of the repository available
   - [x] ~~explore the presence of duplicate variants in the final tier (tier 3)~~
-  - [ ] add ability to determine variant caller used to generate VCF file to allow allele depth specific filtering
-    - [ ] testing an IF ELSE statement which looks for AD term (GATK format)
+  - [x] ~~add ability to determine variant caller used to generate VCF file to allow allele depth specific filtering~~
+    - [x] ~~testing an IF ELSE statement which looks for AD term (GATK format)~~
   - [ ] check for and ignore `.tbi` files in the data directory
   - [ ] explore adding a check for label in the coverage text file as well
   - [ ] add time taken after each stage of the pipeline (in main bash script)
