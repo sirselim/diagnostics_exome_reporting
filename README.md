@@ -32,18 +32,18 @@ install.packages('rmarkdown')
 install.packages('pander')
 ```
 
-*NOTE: for Shiny Server to be correctly installed you will require both `shiny` and `rmarkdow` packages to be installed.*
+*NOTE: for Shiny Server to be correctly installed you will require both `shiny` and `rmarkdown` packages to be installed.*
 
 ## Current to-do list and fixes/features pending
 
   - [ ] look at moving this to-do list over to a roadmap in the wiki
   - [ ] output docx and html version of the report, the html version can be viewed in VCF-DART Viewer (new tab)
-  - [ ] add download buttons for report as well as compressed directory (al files)
+  - [ ] add download buttons for report as well as compressed directory (all files)
   - [ ] look at adding a tab for help/guide
   - [ ] option to run without coverage text file (more a research purpose)
   - [ ] look at integrating VCF-DART and VCF-DART Viewer into a shinydashboard (and within a docker container)
   - [ ] explore having options for which databases to annotate against, i.e. not running VEP `--everything` could cut run time by 30+ mins
-    + [x] reducing the number of threads to 6 and removing the `--merged` VEP option reduce run times to 10-15 mins for vcf files ~30-50K variants in size
+    + [x] ~~reducing the number of threads to 6 and removing the `--merged` VEP option reduce run times to 10-15 mins for vcf files ~30-50K variants in size~~
   - [ ] implement selection of genome build (currently only hg19 is working)
     + [ ] this is a big feature as the current databases aren't all built for hg38
     + [ ] create a separate feature branch to develop this  
