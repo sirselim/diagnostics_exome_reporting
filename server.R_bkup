@@ -7,7 +7,6 @@
 function(input, output) {
     
     options(warn=2, shiny.error=recover)
-    options(shiny.maxRequestSize = 25*1024^2) # set maximum file size allowed to be uploaded (25MB here)
     # allow updating of input variables
     output$HomeDirectory.value <- eventReactive(input$updateButton, { input$HomeDirectory } )
     output$user.value <- eventReactive(input$updateButton, { input$user } )
@@ -41,22 +40,6 @@ function(input, output) {
       system(paste0(input$HomeDirectory, "./WESdiag_pipeline_dev.sh")) 
       # look at adding email notification upon completion here
       })
-    
-    # allow user upload of VCF file
-    observeEvent(input$vcfFile, {
-      in_vcfFile <- input$vcfFile
-      if (is.null(in_vcfFile))
-        return()
-      file.copy(in_vcfFile$datapath, file.path(".", in_vcfFile$name))  # this file.path needs to reflect the location of exome data
-    })
-    
-    # allow user upload of text QC file
-    observeEvent(input$txtFile, {
-      in_txtFile <- input$txtFile
-      if (is.null(in_txtFile))
-        return()
-      file.copy(in_txtFile$datapath, file.path(".", in_txtFile$name))  # this file.path needs to reflect the location of exome data
-    })
     
   }
 ##/END

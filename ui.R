@@ -11,10 +11,12 @@ require(magrittr)
 # define ui and server
 pageWithSidebar(
   headerPanel("VCF-DART (VCF Diagnostics Annotation and Reporting Tool)"),
-  sidebarPanel(
+  sidebarPanel(width=3,
+    
+    conditionalPanel(condition="input.conditionedPanels==1",
     helpText("Enter details for annotation run and report generation."),
     
-    textInput("HomeDirectory", "Home Directory (location of data)", "/home/grcnata/"),
+    textInput("HomeDirectory", "Home Directory (location of data)", "/home/miles/"),
     textInput("user", "User Name", ""),
     textInput("sample", "Sample ID", ""),
     # comment about filename matching, can match any string from a given file in both 'barcode' and 'runID' values
@@ -30,11 +32,16 @@ pageWithSidebar(
     textInput("directory", "Output Directory Name", ""),
     # br(),
     actionButton("updateButton", "Update details"),
-    helpText("Click to update values displayed in the main panel.")
+    helpText("Click to update values displayed in the main panel.")),
+    
+    conditionalPanel(condition="input.conditionedPanels==2",
+      helpText("User upload panel...[under contruction...]")
+    )
     
   ),
   mainPanel(
-    
+    tabsetPanel(id = "conditionedPanels",
+    tabPanel("VCF-DART", value=1,
     helpText("Please review the details you entered below before proceeding."),
     
     tags$head(tags$style(" #container * { display: inline; }")),
@@ -73,7 +80,15 @@ pageWithSidebar(
     br(),
     conditionalPanel(condition="$('html').hasClass('shiny-busy')",
                      tags$div("Running..." %>%
-                                withSpinner(color = "#0dc5c1", size = 2, type = 4), id="loadmessage")) 
+                                withSpinner(color = "#0dc5c1", size = 2, type = 4), id="loadmessage"))
+    ),
+    
+    tabPanel("User upload", value=2,
+             helpText("user upload info here"),
+             fileInput("vcfFile", "Choose a VCF file to upload:", accept = c('text/plain', 'text/vcf')),
+             fileInput("txtFile", "Choose a txt file to upload (QC/coverage information):", accept = c('text/plain', 'text/txt')))
+    
+    )
     
     )
 )

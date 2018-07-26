@@ -455,7 +455,7 @@ There are **`r nrow(tier2_clean[tier2_clean$dbSNP == '.' & tier2_clean$AAchange 
 ```{r table_2.2, echo=FALSE, message=FALSE}
 tier2_mutations <- tier2_clean[tier2_clean$dbSNP == '.' & tier2_clean$AAchange != '.',]
 tier2_mutations <- tier2_mutations[order(tier2_mutations$MutationTaster, tier2_mutations$SIFT, tier2_mutations$Polyphen2),]
-rownames(tier2_mutations) <- c(1:nrow(tier2_mutations))
+#rownames(tier2_mutations) <- c(1:nrow(tier2_mutations))
 #
 emphasize.cols(6) # italics for gene names
 # if more than 50 only show the most damaging 50
