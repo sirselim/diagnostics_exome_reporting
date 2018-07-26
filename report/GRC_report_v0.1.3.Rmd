@@ -580,14 +580,23 @@ Any of the following:
 tier3_mostdamg <- tier3_clean[(tier3_clean$MutationTaster == "A" | tier3_clean$MutationTaster == "D") & tier3_clean$SIFT == "D" & tier3_clean$Polyphen2 == "D" & tier3_clean$dbSNP == "." & tier3_clean$AAchange != '.',]
 # order based on location
 tier3_mostdamg <- tier3_mostdamg[mixedorder(tier3_mostdamg$location),]
-rownames(tier3_mostdamg) <- c(1:nrow(tier3_mostdamg))
+#rownames(tier3_mostdamg) <- c(1:nrow(tier3_mostdamg))
 # set.alignment(c('right', 'center'), row.names = 'right')
 emphasize.cols(6) # italics for gene names
-if (nrow(tier3_mostdamg) < 50) {
-  pander(tier3_mostdamg, caption = "Top most damaging variants.") 
-  } else {
-    pander(tier3_mostdamg[c(1:50),], caption = "First 50 most damaging variants.")
-  }
+#if (nrow(tier3_mostdamg) < 50) {
+#  pander(tier3_mostdamg, caption = "Top most damaging variants.") 
+#  } else {
+#    pander(tier3_mostdamg[c(1:50),], caption = "First 50 most damaging variants.")
+#  }
+#
+if(nrow(tier3_mostdamg) == 0){
+  cat('There are no variants meeting the selection/filtering criteria.')
+} else if (nrow(tier3_mostdamg) < 50) {
+    rownames(tier3_mostdamg) <- c(1:nrow(tier3_mostdamg))
+    pander(tier3_mostdamg, caption = "Top most damaging variants.")
+} else {
+    pander(tier3_mostdamg[c(1:50),], caption = "First 50 most damaging variants.") 
+}
 ```
 
 ### Tier 3.2 – Mutations 

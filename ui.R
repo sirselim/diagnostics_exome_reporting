@@ -2,7 +2,7 @@
 # front-end GUI for variant annotation and reporting tool
 # author: Miles Benton
 # created: 18/04/11
-# modified: 18/04/18
+# modified: 18/07/27
 
 # load packages
 require(shiny)
@@ -84,9 +84,10 @@ pageWithSidebar(
     ),
     
     tabPanel("User upload", value=2,
-             helpText("user upload info here"),
-             fileInput("vcfFile", "Choose a VCF file to upload:", accept = c('text/plain', 'text/vcf')),
-             fileInput("txtFile", "Choose a txt file to upload (QC/coverage information):", accept = c('text/plain', 'text/txt')))
+             HTML("<h2>Upload data to server</h2>"),
+             HTML('<hr style="color: black;">'),
+             fileInput("vcfFile", "Choose a VCF file to upload:", accept = c('text/plain', 'text/vcf'), width = "50%"),
+             fileInput("txtFile", "Choose a txt file to upload (QC/coverage information):", accept = c('text/plain', 'text/txt'), width = "50%"))
     
     )
     

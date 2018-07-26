@@ -2,7 +2,7 @@
 # front-end GUI for variant annotation and reporting tool
 # author: Miles Benton
 # created: 18/04/11
-# modified: 18/04/18
+# modified: 18/07/27
 
 function(input, output) {
     
