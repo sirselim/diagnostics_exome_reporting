@@ -438,7 +438,7 @@ Any of the following:
 
 ```{r table_2.1, echo=FALSE, message=FALSE}
 # tier2_mostdamg <- tier2_clean[tier2_clean$MutationTaster == "D",]
-tier2_mostdamg <- tier2_clean[((tier2_clean$MutationTaster == "A" & tier2_clean$MutationTaster == "D") & tier2_clean$SIFT == "D" & tier2_clean$Polyphen2 == "D") | (tier2_clean$dbSNP == "." & tier2_clean$AAchange != '.'),]
+tier2_mostdamg <- tier2_clean[((tier2_clean$MutationTaster == "A" | tier2_clean$MutationTaster == "D") & tier2_clean$SIFT == "D" & tier2_clean$Polyphen2 == "D") | (tier2_clean$dbSNP == "." & tier2_clean$AAchange != '.'),]
 tier2_mostdamg <- tier2_mostdamg[mixedorder(tier2_mostdamg$location),]
 rownames(tier2_mostdamg) <- c(1:nrow(tier2_mostdamg))
 # set.alignment(c('right', 'center'), row.names = 'right')
