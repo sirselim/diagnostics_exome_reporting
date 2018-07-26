@@ -341,6 +341,7 @@ if (nrow(tier1_mutations) != 0) {
 }
 ```
 There are **`r nrow(tier1_mutations)`** variants that are amino acid changing and don't have an rs number.
+
 ```{r table_1.2, echo=FALSE, message=FALSE, warning=FALSE}
 #
 emphasize.cols(6) # italics for gene names
@@ -457,12 +458,18 @@ rownames(tier2_mutations) <- c(1:nrow(tier2_mutations))
 #
 emphasize.cols(6) # italics for gene names
 # if more than 50 only show the most damaging 50
-if (nrow(tier2_mutations) < 50) {
-  rownames(tier2_mutations) <- c(1:nrow(tier2_mutations))
-  pander(tier2_mutations, caption = "Amino acid changing variant, no rs#") 
-  } else { 
-    pander(tier2_mutations[c(1:50),], caption = "Amino acid changing variant, no rs# (first 50 'most damaging' variants)")
-  }
+#if (nrow(tier2_mutations) < 50) {
+#  rownames(tier2_mutations) <- c(1:nrow(tier2_mutations))
+#  pander(tier2_mutations, caption = "Amino acid changing variant, no rs#") 
+#  } else { 
+#    pander(tier2_mutations[c(1:50),], caption = "Amino acid changing variant, no rs# (first 50 'most damaging' variants)")
+#  }
+if (nrow(tier2_mutations) > 50) {
+    pander(tier2_mutations[c(1:50),], caption = "Amino acid changing variant, no rs# (first 50 'most damaging' variants)") 
+  } else if (nrow(tier2_mutations) < 50 & nrow(tier2_mutations) > 0) { 
+    rownames(tier2_mutations) <- c(1:nrow(tier2_mutations))
+    pander(tier2_mutations, caption = "Amino acid changing variant, no rs#")
+  } 
 ```
 
 ### Tier 2.3 – Variants 
