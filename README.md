@@ -37,9 +37,8 @@ install.packages('pander')
 ## Current to-do list and fixes/features pending
 
   - [ ] look at moving this to-do list over to a roadmap in the wiki
-  - [ ] output docx and html version of the report, the html version can be viewed in VCF-DART Viewer (new tab)
-  - [ ] add download buttons for report as well as compressed directory (all files)
   - [ ] look at adding a tab for help/guide
+  - [ ] add a tab with options to upload files (VCF and coverage text files)
   - [ ] option to run without coverage text file (more a research purpose)
   - [ ] look at integrating VCF-DART and VCF-DART Viewer into a shinydashboard (and within a docker container)
   - [ ] explore having options for which databases to annotate against, i.e. not running VEP `--everything` could cut run time by 30+ mins

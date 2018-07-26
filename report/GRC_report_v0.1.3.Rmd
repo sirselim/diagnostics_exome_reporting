@@ -380,7 +380,8 @@ tier1_4 <- tier1_clean[tier1_clean$dbSNP != '.' & (tier1_clean$ref_freq > 0.01 &
 tier1_4 <- tier1_4[mixedorder(tier1_4$location),]
 rownames(tier1_4) <- c(1:nrow(tier1_4))
 ```
-There are **`r nrow(tier1_4)`** variants classified as rare SNPs.  
+There are **`r nrow(tier1_4)`** variants classified as rare SNPs. 
+
 ```{r table_1.4 out, echo=FALSE, message=FALSE, warning=FALSE}
 emphasize.cols(6) # italics for gene names
 if (nrow(tier1_4) < 50) { 
@@ -464,12 +465,14 @@ emphasize.cols(6) # italics for gene names
 #  } else { 
 #    pander(tier2_mutations[c(1:50),], caption = "Amino acid changing variant, no rs# (first 50 'most damaging' variants)")
 #  }
-if (nrow(tier2_mutations) > 50) {
-    pander(tier2_mutations[c(1:50),], caption = "Amino acid changing variant, no rs# (first 50 'most damaging' variants)") 
-  } else if (nrow(tier2_mutations) < 50 & nrow(tier2_mutations) > 0) { 
+if(nrow(tier2_mutations) == 0){
+  cat('There are no variants meeting the selection/filtering criteria.')
+} else if (nrow(tier2_mutations) < 50) {
     rownames(tier2_mutations) <- c(1:nrow(tier2_mutations))
     pander(tier2_mutations, caption = "Amino acid changing variant, no rs#")
-  } 
+} else {
+    pander(tier2_mutations[c(1:50),], caption = "Amino acid changing variant, no rs# (first 50 'most damaging' variants)") 
+}
 ```
 
 ### Tier 2.3 – Variants 
