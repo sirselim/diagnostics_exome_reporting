@@ -51,8 +51,6 @@ header=$(paste <(echo "GENOME_BUILD") \
                 <(echo "ALT") \
                 <(echo "RSNO") \
                 <(echo "GENESYM") \
-                <(echo "MutTaster") \
-                <(echo "MutAssessor") \
                 <(echo "DP_coverage") \
                 <(echo "URL") \
                 --delimiters '\t')
@@ -93,11 +91,11 @@ RSNO=$(cut -f 3 tmp_variants.txt)
 # get coverage
 DP_coverage=$(sed 's/^.*;DP=//' tmp_variants.txt | tr ";" " " | awk '{print $1}')
 #
-MutationTaster=$(sed 's/^.*MutationTaster_pred=//' tmp_variants.txt | tr "; && |" " " | awk '{print $1}' | sed -e 's/chr.*/./g')
+#MutationTaster=$(sed 's/^.*MutationTaster_pred=//' tmp_variants.txt | tr "; && |" " " | awk '{print $1}' | sed -e 's/chr.*/./g')
 #
-MutationAssessor=$(sed 's/^.*MutationAssessor_pred=//' tmp_variants.txt | tr "; && |" " " | awk '{print $1}' | sed -e 's/chr.*/./g')
+#MutationAssessor=$(sed 's/^.*MutationAssessor_pred=//' tmp_variants.txt | tr "; && |" " " | awk '{print $1}' | sed -e 's/chr.*/./g')
 # 
-CADD=$(sed 's/^.*CADD_phred=//' tmp_variants.txt | tr "; && |" " " | awk '{print $1}' | sed -e 's/chr.*/./g')
+#CADD=$(sed 's/^.*CADD_phred=//' tmp_variants.txt | tr "; && |" " " | awk '{print $1}' | sed -e 's/chr.*/./g')
 # extract gene symbol
 gene_symbol=$(sed -e 's/^.*GENEINFO=//' tmp_variants.txt | tr "| && :" " " | awk '{print $1}' | sed -e 's/chr.*/./g')
 gene_symbol2=$(sed -e 's/^.*GENE=//' tmp_variants.txt | tr "| && :" " " | awk '{print $1}' | sed -e 's/chr.*/./g')
@@ -120,8 +118,6 @@ dataset=$(paste <(echo "$GENOME_BUILD") \
                 <(echo "$ALT") \
                 <(echo "$RSNO") \
                 <(echo "$GENESYM") \
-                <(echo "$MutationTaster) \
-                <(echo "$MutationAssessor") \
                 <(echo "$DP_coverage") \
                 <(echo "$URL") \
                     --delimiters '\t')
