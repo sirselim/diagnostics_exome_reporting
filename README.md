@@ -38,11 +38,11 @@ install.packages('pander')
 
   - [ ] look at moving this to-do list over to a roadmap in the wiki
   - [ ] look at adding a tab for help/guide
-  - [ ] add a tab with options to upload files (VCF and coverage text files)
+  - [x] ~~add a tab with options to upload files (VCF and coverage text files)~~
   - [ ] option to run without coverage text file (more a research purpose)
   - [ ] look at integrating VCF-DART and VCF-DART Viewer into a shinydashboard (and within a docker container)
   - [ ] explore having options for which databases to annotate against, i.e. not running VEP `--everything` could cut run time by 30+ mins
-    + [x] ~~reducing the number of threads to 6 and removing the `--merged` VEP option reduce run times to 10-15 mins for vcf files ~30-50K variants in size~~
+    + [x] ~~reducing the number of threads to 6 and removing the `--merged` VEP option reduce run times to 10-15 mins for vcf files 30-50K variants in size~~
   - [ ] implement selection of genome build (currently only hg19 is working)
     + [ ] this is a big feature as the current databases aren't all built for hg38
     + [ ] create a separate feature branch to develop this  
@@ -51,7 +51,7 @@ install.packages('pander')
   - [ ] look into adding a cancel/exit button to the Shiny App to kill run
   - [ ] explore asking user for raw data dir in GUI or configuration file (currently hard-coded)
   - [ ] evaluate whether we need to continue to allow the user to define the 'home' dir
-  - [ ] generate and send an email and/or text message upon run completion 
+  - [ ] generate and send an email and/or text message upon run completion
   - [ ] look into developing an option for "off-line mode"
     + [ ] design a check for internet connection
     + [ ] would need a local copy of the repository available
