@@ -1,8 +1,8 @@
 #!/usr/bin/env Rscript
 # front-end GUI for variant annotation and reporting tool
 # author: Miles Benton
-# created: 18/04/11
-# modified: 18/07/27
+# created: 2018/04/11
+# modified: 2019/03/29
 
 function(input, output) {
     
@@ -32,6 +32,9 @@ function(input, output) {
                                                      input$directory), file = paste0(input$HomeDirectory, "pipeline_input.txt"), 
                                                col.names = FALSE, row.names = FALSE, quote = FALSE)
       # take user uploaded lists and put them into gene_lilsts dir (created below) 
+      # check for directory first and remove if present
+      unlink(paste0(input$HomeDirectory, 'gene_lists/', recursive = TRUE))
+      # create gene_lists and populate
       dir.create(paste0(input$HomeDirectory, 'gene_lists/'))
       file.copy(input$tier0List$datapath, paste0(input$HomeDirectory, 'gene_lists/', input$tier0List$name))
       file.copy(input$tier1List$datapath, paste0(input$HomeDirectory, 'gene_lists/', input$tier1List$name))

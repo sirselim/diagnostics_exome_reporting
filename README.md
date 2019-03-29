@@ -28,6 +28,7 @@ VCF-DART currently requires the following packages (and their dependencies) to b
 # CRAN
 install.packages('magrittr')
 install.packages('shiny')
+install.packages('shinyBS')
 install.packages('rmarkdown')
 install.packages('pander')
 ```
@@ -37,8 +38,6 @@ install.packages('pander')
 ## Current to-do list and fixes/features pending
 
   - [ ] look at moving this to-do list over to a roadmap in the wiki
-  - [ ] look at adding a tab for help/guide
-  - [x] ~~add a tab with options to upload files (VCF and coverage text files)~~
   - [ ] option to run without coverage text file (more a research purpose)
   - [ ] look at integrating VCF-DART and VCF-DART Viewer into a shinydashboard (and within a docker container)
   - [ ] explore having options for which databases to annotate against, i.e. not running VEP `--everything` could cut run time by 30+ mins
@@ -47,7 +46,9 @@ install.packages('pander')
     + [ ] this is a big feature as the current databases aren't all built for hg38
     + [ ] create a separate feature branch to develop this  
   - [ ] add more extracted features to the `vcfcompiler_diagnostics.sh` script (i.e. CADD score)
-    + [ ] make CADD score available (add extraction routine in `vcfcompiler_diagnostics.sh`)
+    + [x] ~~make CADD score available (add extraction routine in `vcfcompiler_diagnostics.sh`)~~
+    + [x] ~~build script to scrape clinvar and provide updated annotation~~
+    + [ ] combine this with results
   - [ ] look into adding a cancel/exit button to the Shiny App to kill run
   - [ ] explore asking user for raw data dir in GUI or configuration file (currently hard-coded)
   - [ ] evaluate whether we need to continue to allow the user to define the 'home' dir
@@ -57,9 +58,12 @@ install.packages('pander')
     + [ ] would need a local copy of the repository available
   - [ ] check for and ignore `.tbi` files in the data directory
   - [ ] explore adding a check for label in the coverage text file as well
-  - [ ] check for existing `gene_list` dir and delete if present
   - [ ] add a check for input variables and warn/error display that this is the case if missing
   - [ ] integrate docker branch (this is likely to address some/all above concerns)
+  - [x] ~~look at adding a tab for help/guide~~
+    + [x] ~~added tooltips throughout app, detailed help/documentation can be found at GitHub wiki~~
+  - [x] ~~add a tab with options to upload files (VCF and coverage text files)~~
+  - [x] ~~check for existing `gene_list` dir and delete if present~~
   - [x] ~~removed the need for an external configuration file~~
     - [x] ~~config options are now at the start of the script (user defined)~~
   - [x] ~~GitHub repo requires ssh passphrase each use~~  

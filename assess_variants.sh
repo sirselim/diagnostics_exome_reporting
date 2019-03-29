@@ -1,12 +1,12 @@
 #!/bin/bash
 #
 # Created: 2016/04/04
-# Last modified: 2019/03/05
+# Last modified: 2019/03/21
 # Author: Miles Benton
 #
 # """
-# This script forms the start of the diagnostic WES pipeline, finding the most damaging muations and 
-# generating MutationAssessor html links for them.
+# This script forms the start of the diagnostic WES pipeline, finding the "most damaging" muations predicted by 
+# and MutationTaster and MutationAssessor and generating MutationAssessor html links for them.
 #
 # E.g. INPUT
 # ./assess_variants.sh sample_file.vcf.gz genome_build
@@ -45,15 +45,18 @@ fi
 
 # add header to csv file (i.e. write one line)
 header=$(paste <(echo "GENOME_BUILD") \
-				<(echo "CHR") \
-                <(echo "POSITION") \
-                <(echo "REF") \
-                <(echo "ALT") \
-                <(echo "RSNO") \
-                <(echo "GENESYM") \
-                <(echo "DP_coverage") \
-                <(echo "URL") \
-                --delimiters '\t')
+<(echo "CHR") \
+<(echo "POSITION") \
+<(echo "REF") \
+<(echo "ALT") \
+<(echo "RSNO") \
+<(echo "GENESYM") \
+<(echo "DP_coverage") \
+<(echo "MutTaster") \
+<(echo "MutAssesor") \
+<(echo "CADD") \
+<(echo "URL") \
+--delimiters '\t')
 echo "$header" >> "$OUTFILE"
 
 # check for variables
@@ -91,15 +94,15 @@ RSNO=$(cut -f 3 tmp_variants.txt)
 # get coverage
 DP_coverage=$(sed 's/^.*;DP=//' tmp_variants.txt | tr ";" " " | awk '{print $1}')
 #
-#MutationTaster=$(sed 's/^.*MutationTaster_pred=//' tmp_variants.txt | tr "; && |" " " | awk '{print $1}' | sed -e 's/chr.*/./g')
+MutationTaster=$(sed 's/^.*MutationTaster_pred=//' tmp_variants.txt | tr "; && |" " " | awk '{print $1}' | sed -e 's/chr.*/./g' | sed 's/,.//g')
 #
-#MutationAssessor=$(sed 's/^.*MutationAssessor_pred=//' tmp_variants.txt | tr "; && |" " " | awk '{print $1}' | sed -e 's/chr.*/./g')
+MutationAssessor=$(sed 's/^.*MutationAssessor_pred=//' tmp_variants.txt | tr "; && |" " " | awk '{print $1}' | sed -e 's/chr.*/./g')
 # 
-#CADD=$(sed 's/^.*CADD_phred=//' tmp_variants.txt | tr "; && |" " " | awk '{print $1}' | sed -e 's/chr.*/./g')
+CADD=$(sed 's/^.*CADD_phred=//' tmp_variants.txt | tr "; && |" " " | awk '{print $1}' | sed -e 's/chr.*/./g')
 # extract gene symbol
 gene_symbol=$(sed -e 's/^.*GENEINFO=//' tmp_variants.txt | tr "| && :" " " | awk '{print $1}' | sed -e 's/chr.*/./g')
 gene_symbol2=$(sed -e 's/^.*GENE=//' tmp_variants.txt | tr "| && :" " " | awk '{print $1}' | sed -e 's/chr.*/./g')
-GENESYM=$(paste -d' ' <(echo "$gene_symbol" | tr ' ' '\n') <(echo "$gene_symbol2" | tr ' ' '\n') | tr " " ";")
+GENESYM=$(paste -d' ' <(echo "$gene_symbol" | tr ' ' '\n') <(echo "$gene_symbol2" | tr ' ' '\n') | awk '{ while(++i<=NF) printf (!a[$i]++) ? $i FS : ""; i=split("",a); print ""}' | sed 's/\. //g' | sed 's/\b\s\b/;/g')
 
 # generate url to Mutation Assessor
 URL1=$(for (( c=1; c<="$VARNO"; c++)) ; do echo "http://mutationassessor.org/r3/?cm=var&var=" ; done)
@@ -112,14 +115,17 @@ rm tmp_variants.txt
 
 # create output
 dataset=$(paste <(echo "$GENOME_BUILD") \
-				<(echo "$CHR") \
-                <(echo "$POSITION") \
-                <(echo "$REF") \
-                <(echo "$ALT") \
-                <(echo "$RSNO") \
-                <(echo "$GENESYM") \
-                <(echo "$DP_coverage") \
-                <(echo "$URL") \
-                    --delimiters '\t')
-echo "$dataset" >> "$OUTFILE"
+<(echo "$CHR") \
+<(echo "$POSITION") \
+<(echo "$REF") \
+<(echo "$ALT") \
+<(echo "$RSNO") \
+<(echo "$GENESYM") \
+<(echo "$DP_coverage") \
+<(echo "$MutationTaster") \
+<(echo "$MutationAssessor") \
+<(echo "$CADD") \
+<(echo "$URL") \
+--delimiters '\t')
+echo "$dataset" | sed 's/\.;//g' | sed 's/;\.//g' >> "$OUTFILE"
 ##/END

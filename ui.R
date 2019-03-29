@@ -1,13 +1,14 @@
 #!/usr/bin/env Rscript
 # front-end GUI for variant annotation and reporting tool
 # author: Miles Benton
-# created: 18/04/11
-# modified: 18/07/27
+# created: 2018/04/11
+# modified: 2019/03/29
 
 # load packages
 require(shiny)
 require(shinycssloaders)
 require(magrittr)
+require(shinyBS)
 # define ui and server
 pageWithSidebar(
   headerPanel("VCF-DART (VCF Diagnostics Annotation and Reporting Tool)"),
@@ -15,21 +16,45 @@ pageWithSidebar(
     
     conditionalPanel(condition="input.conditionedPanels==1",
     helpText("Enter details for annotation run and report generation."),
-    
+    # default HomeDirectory location needs to be set on deployment
     textInput("HomeDirectory", "Home Directory (location of data)", "/home/miles/"),
+    bsTooltip("HomeDirectory", title = 'Please enter the directory where run results and report will be located.', 
+              placement = "right", options = list(container = "body")),
     textInput("user", "User Name", ""),
+    bsTooltip("user", title = 'Please enter your name.', 
+              placement = "right", options = list(container = "body")),
     textInput("sample", "Sample ID", ""),
+    bsTooltip("sample", title = 'Please enter the name of the sample. <b>This string must be present in both provided VCF and text filenames.</b>', 
+              placement = "right", options = list(container = "body")),
     # comment about filename matching, can match any string from a given file in both 'barcode' and 'runID' values
     textInput("barcode", "Label (i.e. barcode)", ""),
+    bsTooltip("barcode", 
+              title = 'Please enter the sequencing barcode/sample number or similar. <b>This string must be present in both provided VCF and text filenames.</b>', 
+              placement = "right", options = list(container = "body")),
     textInput("runID", "Run ID", ""),
+    bsTooltip("runID", 
+              title = 'Please enter an identifier for this run.', 
+              placement = "right", options = list(container = "body")),
     selectInput("build", "Genome Build", choices = c('hg19', 'hg38')),
-    fileInput("tier0List", "Choose Tier 0 gene list",
+    bsTooltip("build", 
+              title = 'Note: currently only hg19 is supported in this version of VCF-DART.', 
+              placement = "right", options = list(container = "body")),
+    tipify(fileInput("tier0List", "Choose Tier 0 gene list",
               accept = c("text/csv", "text/comma-separated-values,text/plain", ".csv")),
-    fileInput("tier1List", "Choose Tier 1 gene list",
+              title = 'Select a text file to upload for tier 0. This would usually be a short list of genes of immediate interest.', 
+              placement = "right", options = list(container = "body")),
+    tipify(fileInput("tier1List", "Choose Tier 1 gene list",
               accept = c("text/csv", "text/comma-separated-values,text/plain", ".csv")),
-    fileInput("tier2List", "Choose Tier 2 gene list",
+              title = 'Select a text file to upload for tier 1. This is usually a wider list of genes associated with your diease/disorder', 
+              placement = "right", options = list(container = "body")),
+    tipify(fileInput("tier2List", "Choose Tier 2 gene list",
               accept = c("text/csv", "text/comma-separated-values,text/plain", ".csv")),
+              title = 'Select a text file to upload for tier 2. This is usually a list of genes involved in important related pathways', 
+              placement = "right", options = list(container = "body")),
     textInput("directory", "Output Directory Name", ""),
+    bsTooltip("directory", 
+              title = 'Please enter an output directory. <b>Note: this directory will be used by VCF-DART Viewer to display results therefore it is good practice to include the same sample name you provided above as part of this.</b>', 
+              placement = "right", options = list(container = "body")),
     # br(),
     actionButton("updateButton", "Update details"),
     helpText("Click to update values displayed in the main panel.")),
@@ -77,6 +102,8 @@ pageWithSidebar(
                          }
                          ")),
     div(id="container", actionButton("goButton", "Go!", width = '80px'), helpText("Click the button to start analysis.")),
+    bsTooltip("goButton", title = 'Please confirm all entered details above are correct before proceeding. If you need to amend, do so to the right and then click "Update details" again.', 
+              placement = "bottom", options = list(container = "body")),
     br(),
     conditionalPanel(condition="$('html').hasClass('shiny-busy')",
                      tags$div("Running..." %>%
@@ -86,8 +113,14 @@ pageWithSidebar(
     tabPanel("User upload", value=2,
              HTML("<h2>Upload data to server</h2>"),
              HTML('<hr style="color: black;">'),
-             fileInput("vcfFile", "Choose a VCF file to upload:", accept = c('text/plain', 'text/vcf'), width = "50%"),
-             fileInput("txtFile", "Choose a txt file to upload (QC/coverage information):", accept = c('text/plain', 'text/txt'), width = "50%"))
+             tipify(fileInput("vcfFile", "Choose a VCF file to upload:", accept = c('text/plain', 'text/vcf'), width = "50%"),
+                    title = "Select a VCF file to upload. Recommend that this is a compressed VCF (.vcf.gz), and that it has a detailed filename.", 
+                    placement = "right", 
+                    options = list(container = "body")),
+             tipify(fileInput("txtFile", "Choose a txt file to upload (QC/coverage information):", accept = c('text/plain', 'text/txt'), width = "50%"),
+                    title = "Select a coverage and QC text file to upload. Please ensure that this contains a detailed filename with the same content as the VCF file above (i.e. sample name and barcode/run label should be exactly the same in both files).", 
+                    placement = "right", 
+                    options = list(container = "body")))
     
     )
     
