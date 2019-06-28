@@ -2,6 +2,8 @@
 
 Pipeline to annotate and filter variant called format (vcf) files and generate a report document for clinical diagnostics. The variant annotation and filtering pipeline now uses a web server GUI implemented in R Shiny. 
 
+-----
+
 ## IMPORTANT - Please Read
 
 **Disclaimer**
@@ -26,6 +28,8 @@ other problems on the website, please let us know immediately so we
 can rectify these accordingly. Your help in this regard is greatly
 appreciated! The best way to do this is to log an issue in this GitHub repository, 
 or if you feel inclined you are welcome to create a pull request.
+
+-----
 
 ## Software Dependencies
 
