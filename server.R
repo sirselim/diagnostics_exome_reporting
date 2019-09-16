@@ -2,9 +2,9 @@
 # front-end GUI for variant annotation and reporting tool
 # author: Miles Benton
 # created: 2018/04/11
-# modified: 2019/03/29
+# modified: 2019/04/05
 
-function(input, output) {
+function(input, output, session) {
     
     options(warn=2, shiny.error=recover)
     options(shiny.maxRequestSize = 25*1024^2) # set maximum file size allowed to be uploaded (25MB here)
@@ -41,8 +41,9 @@ function(input, output) {
       file.copy(input$tier2List$datapath, paste0(input$HomeDirectory, 'gene_lists/', input$tier2List$name))
       # these genes will be copied to the output dir and this gene_list dir will be removed (in main bash script)
       # start main pipeline bash script
-      system(paste0(input$HomeDirectory, "./WESdiag_pipeline_dev.sh")) 
-      # look at adding email notification upon completion here
+      system(paste0(input$HomeDirectory, "./WESdiag_pipeline_dev.sh &"))
+      # shell process is now being sent to the background
+      # TO DO: look at adding email notification upon completion here
       })
     
     # allow user upload of VCF file
@@ -50,7 +51,7 @@ function(input, output) {
       in_vcfFile <- input$vcfFile
       if (is.null(in_vcfFile))
         return()
-      file.copy(in_vcfFile$datapath, file.path(".", in_vcfFile$name))  # this file.path needs to reflect the location of exome data
+      file.copy(in_vcfFile$datapath, file.path(".", in_vcfFile$name))  # NOTE: this file.path needs to reflect the location of exome data (user edit)
     })
     
     # allow user upload of text QC file
@@ -58,7 +59,17 @@ function(input, output) {
       in_txtFile <- input$txtFile
       if (is.null(in_txtFile))
         return()
-      file.copy(in_txtFile$datapath, file.path(".", in_txtFile$name))  # this file.path needs to reflect the location of exome data
+      file.copy(in_txtFile$datapath, file.path(".", in_txtFile$name))  # NOTE: this file.path needs to reflect the location of exome data (user edit)
+    })
+    
+    output$log <- renderText({
+      ### 1sec refresh
+      invalidateLater(1000, session)
+      ### read log file 40 tail
+      logFile <- list.files(path = paste0(input$HomeDirectory), pattern = "*.log", full.names = T)
+      if (length(logFile) == 0) return(NULL)
+      text_log <- readLines(logFile) %>% tail(10) %>% paste(collapse = "\n")
+      return(text_log)
     })
     
   }

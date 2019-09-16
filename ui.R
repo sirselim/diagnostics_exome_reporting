@@ -2,7 +2,7 @@
 # front-end GUI for variant annotation and reporting tool
 # author: Miles Benton
 # created: 2018/04/11
-# modified: 2019/03/29
+# modified: 2019/04/05
 
 # load packages
 require(shiny)
@@ -17,7 +17,7 @@ pageWithSidebar(
     conditionalPanel(condition="input.conditionedPanels==1",
     helpText("Enter details for annotation run and report generation."),
     # default HomeDirectory location needs to be set on deployment
-    textInput("HomeDirectory", "Home Directory (location of data)", "/home/miles/"),
+    textInput("HomeDirectory", "Home Directory (location of data)", "/home/ubuntu/"), # NOTE: user defined default directory!!
     bsTooltip("HomeDirectory", title = 'Please enter the directory where run results and report will be located.', 
               placement = "right", options = list(container = "body")),
     textInput("user", "User Name", ""),
@@ -60,7 +60,11 @@ pageWithSidebar(
     helpText("Click to update values displayed in the main panel.")),
     
     conditionalPanel(condition="input.conditionedPanels==2",
-      helpText("User upload panel...[under contruction...]")
+      helpText("User upload panel")
+    ),
+    
+    conditionalPanel(condition="input.conditionedPanels==3",
+                     helpText("Log viewing panel...[under contruction...]")
     )
     
   ),
@@ -105,24 +109,31 @@ pageWithSidebar(
     bsTooltip("goButton", title = 'Please confirm all entered details above are correct before proceeding. If you need to amend, do so to the right and then click "Update details" again.', 
               placement = "bottom", options = list(container = "body")),
     br(),
-    conditionalPanel(condition="$('html').hasClass('shiny-busy')",
-                     tags$div("Running..." %>%
-                                withSpinner(color = "#0dc5c1", size = 2, type = 4), id="loadmessage"))
+    HTML("<h3>Log file contents</h3>"),
+    HTML("This section displays the last 10 lines of the most currently running sample's log file, 
+                  which will signal when processing is complete and be useful to troubleshoot any potential errors."),
+    tipify(verbatimTextOutput("log"), 
+           title = "This displays the last 10 lines of the currently processed sample log file.", 
+           placement = "left", options = list(container = "body"))
+    # deactivated the activity wheel for now
+    # br(),
+    # conditionalPanel(condition="$('html').hasClass('shiny-busy')",
+    #                  tags$div("Running..." %>%
+    #                             withSpinner(color = "#0dc5c1", size = 1, type = 4), id="loadmessage"))
     ),
     
     tabPanel("User upload", value=2,
              HTML("<h2>Upload data to server</h2>"),
              HTML('<hr style="color: black;">'),
              tipify(fileInput("vcfFile", "Choose a VCF file to upload:", accept = c('text/plain', 'text/vcf'), width = "50%"),
-                    title = "Select a VCF file to upload. Recommend that this is a compressed VCF (.vcf.gz), and that it has a detailed filename.", 
+                    title = "Select a VCF file to upload. Recommend that this is a compressed VCF (.vcf.gz), and that it has a detailed filename. <b>Example: S196_Exome_001.vcf.gz</b>", 
                     placement = "right", 
                     options = list(container = "body")),
              tipify(fileInput("txtFile", "Choose a txt file to upload (QC/coverage information):", accept = c('text/plain', 'text/txt'), width = "50%"),
-                    title = "Select a coverage and QC text file to upload. Please ensure that this contains a detailed filename with the same content as the VCF file above (i.e. sample name and barcode/run label should be exactly the same in both files).", 
+                    title = "Select a coverage and QC text file to upload. Please ensure that this contains a detailed filename with the same content as the VCF file above (i.e. sample name and barcode/run label should be exactly the same in both files).  <b>Example: S196_Exome_001_Stats.txt</b>", 
                     placement = "right", 
-                    options = list(container = "body")))
-    
-    )
-    
+                    options = list(container = "body"))
+             )
+        )
     )
 )

@@ -1,7 +1,7 @@
 #!/bin/bash
 #
 # Created: 2018/04/11
-# Last modified: 2018/06/29
+# Last modified: 2019/03/29
 # Author: Miles Benton
 #
 # """
@@ -111,7 +111,7 @@ echo "...cloning and extracting latest pipeline scripts and directories from Git
 git clone git@github.com:sirselim/diagnostics_exome_reporting.git --branch user-defined-tiers --single-branch "$sampleDIR"
 #### testing the feature branch
 # capture vcf and quality information files from 'raw' directory
-echo "...transfering required files..."
+echo "...transferring required files..."
 # define the label and .vcf.gz string to narrow search
 IONLABEL=$(paste -d'.' <(echo "$LABELID") <(echo 'vcf.gz'))
 #echo "$IONLABEL"

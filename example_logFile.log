@@ -1,0 +1,7 @@
+      dir.create(paste0(input$HomeDirectory, 'gene_lists/'))
+      file.copy(input$tier0List$datapath, paste0(input$HomeDirectory, 'gene_lists/', input$tier0List$name))
+      file.copy(input$tier1List$datapath, paste0(input$HomeDirectory, 'gene_lists/', input$tier1List$name))
+      file.copy(input$tier2List$datapath, paste0(input$HomeDirectory, 'gene_lists/', input$tier2List$name))
+      # these genes will be copied to the output dir and this gene_list dir will be removed (in main bash script)
+      
+      ... done ...

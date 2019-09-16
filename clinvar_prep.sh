@@ -1,4 +1,4 @@
-    #!/bin/bash
+#!/bin/bash
 # Miles Benton
 # created: 2019-03-08
 # modified: 2019-03-08
