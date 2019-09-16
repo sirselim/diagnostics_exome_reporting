@@ -2,9 +2,14 @@
 
 Pipeline to annotate and filter variant called format (vcf) files and generate a report document for clinical diagnostics. The variant annotation and filtering pipeline now uses a web server GUI implemented in R Shiny.
 
+**Published article:**
+> Benton MC, Smith RA, Haupt LM, Sutherland HG, Dunn PJ, Albury CL, Maksemous N, Lea RA, and Griffiths LR. (2019) _Variant Call Format (VCF)-Diagnostic Annotation and Reporting Tool (VCF-DART) A Customizable Analysis Pipeline for Identification of Clinically Relevant Genetic Variants in Next-Generation Sequencing Data_. The Journal of Molecular Diagnostics [(article)](https://jmd.amjpathol.org/article/S1525-1578(19)30353-8/fulltext)
+
 -----
 
 ## IMPORTANT - Please Read
+
+This repository contains the most stable version of VCF-DART that accompanies the published article. For more recent stable and development builds and to contribute please visit the [Genomics Aotearoa](https://github.com/GenomicsAotearoa) GitHub.
 
 **Disclaimer**
 
