@@ -2,6 +2,35 @@
 
 Pipeline to annotate and filter variant called format (vcf) files and generate a report document for clinical diagnostics. The variant annotation and filtering pipeline now uses a web server GUI implemented in R Shiny.
 
+-----
+
+## IMPORTANT - Please Read
+
+**Disclaimer**
+
+Please note that this is a beta version of the VCF-DART platform which is
+still undergoing final testing before its official release. The
+platform, its software and all content found on it are provided on an
+“as is” and “as available” basis. VCF-DART does not give any warranties,
+whether express or implied, as to the suitability or usability of the
+website, server, its software or any of its content.
+
+VCF-DART will not be liable for any loss, whether such loss is direct,
+indirect, special or consequential, suffered by any party as a result
+of their use of the VCF-DART platform, its software or content. Any
+downloading or uploading of material to the website/server is done at the
+user’s own risk and the user will be solely responsible for any
+damage to any computer system or loss of data that results from such
+activities.
+
+Should you encounter any bugs, glitches, lack of functionality or
+other problems on the website, please let us know immediately so we
+can rectify these accordingly. Your help in this regard is greatly
+appreciated! The best way to do this is to log an issue in this GitHub repository, 
+or if you feel inclined you are welcome to create a pull request.
+
+-----
+
 ## Software Dependencies
 
 The following programs need to be available/installed for correct operation:
