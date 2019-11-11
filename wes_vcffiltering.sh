@@ -1,7 +1,7 @@
 #!/bin/bash
 #
 # Created: 2016/02/19
-# Last modified: 2018/04/20
+# Last modified: 2019/11/11
 # Author: Miles Benton
 #
 # """
@@ -15,7 +15,7 @@
 
 # define the sample being processed
 # INPUTFILE="$1"	# annotated vcf file
-INPUTFILE=$(ls -d vcf/* | grep "_dbSNP_VEP_dbNSFP.vcf.gz$")
+INPUTFILE=$(ls vcf/ | grep "_dbSNP_VEP_dbNSFP.vcf.gz$")
 filename=$(echo "$INPUTFILE" | tr "/ && ." " " | awk '{printf $2}')
 
 # date
