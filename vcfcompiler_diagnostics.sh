@@ -100,8 +100,8 @@ CAF1=$(sed '1d; s/^.*;CAF=//' "$INPUTFILE" | tr ";" " " | awk '{print $1}' | sed
 CAF2=$(sed '1d; s/^.*;CAF=//' "$INPUTFILE" | tr ";" " " | awk '{print $1}' | sed -e 's/chr.*/./g' | tr "," " " | awk '{print $2}' | sed -e 's/^$/./g')
 variant_type=$(sed '1d; s/^.*CSQ=//' "$INPUTFILE" |  tr "|" " " | awk '{print $2}')        # get variant type from VEP data
 # get dbSNP gene symbol (only viable if an rs number is assigned) and extra gene info
-gene_symbol=$(sed -e '1d; s/^.*GENEINFO=//' "$INPUTFILE" | tr "| && :" " " | awk '{print $1}' | sed -e 's/chr.*/./g')
-gene_symbol2=$(sed -e '1d; s/^.*GENE=//' "$INPUTFILE" | tr "| && :" " " | awk '{print $1}' | sed -e 's/chr.*/./g')
+gene_symbol=$(sed -e '1d; s/^.*GENEINFO=//' "$INPUTFILE" | tr "| && : && ;" " " | awk '{print $1}' | sed -e 's/chr.*/./g')
+gene_symbol2=$(sed -e '1d; s/^.*GENE=//' "$INPUTFILE" | tr "| && : && ;" " " | awk '{print $1}' | sed -e 's/chr.*/./g')
 genes=$(paste -d' ' <(echo "$gene_symbol" | tr ' ' '\n') <(echo "$gene_symbol2" | tr ' ' '\n') | tr " " ";")
 # future work to tidy the above
 coding=$(tail -n +2 "$INPUTFILE" | tr "| && :" " " | gawk --re-interval '{ printf "." ; for ( i = 2 ; i <= NF ; i ++ ) { if ( $i ~ /c\.[A-Z0-9]{2,}[A-Z]/ ) { printf $i ";" } } printf "\n" }' | sed -e 's/^.c/c/g')
