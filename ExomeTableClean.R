@@ -31,6 +31,8 @@ exome_table$SIFT <- sapply(sapply(strsplit(exome_table$SIFT, ","), unique), past
 exome_table$MutationTaster <- sapply(sapply(strsplit(exome_table$MutationTaster, ","), unique), paste, collapse = ";")
 # Polyphen2
 exome_table$Polyphen2 <- sapply(sapply(strsplit(exome_table$Polyphen2, ","), unique), paste, collapse = ";")
+# CADD
+exome_table$CADD <- as.numeric(as.character(exome_table$CADD))
 # 1KG allele freqs
 exome_table$CAF1[exome_table$CAF1 == '.'] <- 0
 exome_table$CAF1 <- as.numeric(exome_table$CAF1)
