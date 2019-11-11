@@ -36,6 +36,9 @@ zcat vcf/"$filename".vcf.gz | grep '##' | grep 'VEP=\|SnpSiftV\|file\|source=\|p
 # get vcf header for out files
 "$BCFTOOLS" view -h vcf/"$filename".vcf.gz | tail -n 1 > vcf/vcf_header.txt
 
+# force tabix index build
+tabix -f vcf/"$filename".vcf.gz
+
 ## Tier 0 Genes - filtering
 echo "...filtering at tier 0 specfic genes..."
 # replace grep filtering with tabix for speed
