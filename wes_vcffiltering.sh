@@ -15,7 +15,7 @@
 
 # define the sample being processed
 # INPUTFILE="$1"	# annotated vcf file
-INPUTFILE=$(ls vcf/ | grep "_dbSNP_VEP_dbNSFP.vcf.gz$")
+INPUTFILE=$(ls -d vcf/* | grep "_dbSNP_VEP_dbNSFP.vcf.gz$")
 filename=$(echo "$INPUTFILE" | tr "/ && ." " " | awk '{printf $2}')
 
 # date
